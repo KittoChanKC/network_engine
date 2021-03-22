@@ -31,4 +31,10 @@ add_executable(NetworkWS ${search_src_files})
 #add_subdirectory(fmt)
 #set(fmt_DIR externals/fmt/_build)
 find_package(fmt)
-target_link_libraries(NetworkWS fmt::fmt)
+
+#---------------------------------------------
+#-- imgui
+#---------------------------------------------
+find_package(imgui)
+
+target_link_libraries(NetworkWS fmt::fmt imgui::imgui)
