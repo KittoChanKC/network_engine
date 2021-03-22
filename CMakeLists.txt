@@ -1,5 +1,8 @@
 cmake_minimum_required( VERSION 3.10 )
 
+set(CMAKE_TOOLCHAIN_FILE externals/vcpkg/scripts/buildsystems/vcpkg.cmake)
+set(CMAKE_CXX_STANDARD 17)
+
 #---------------------------------------------
 #-- NetworkWS (main)
 #---------------------------------------------
@@ -26,6 +29,6 @@ add_executable(NetworkWS ${search_src_files})
 #-- fmt
 #---------------------------------------------
 #add_subdirectory(fmt)
-set(fmt_DIR OpenSource/fmt/_build)
+#set(fmt_DIR externals/fmt/_build)
 find_package(fmt)
 target_link_libraries(NetworkWS fmt::fmt)
