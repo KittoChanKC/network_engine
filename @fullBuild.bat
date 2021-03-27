@@ -3,7 +3,7 @@
 cd %~dp0
 
 mkdir externals\vcpkg
-git clone https://github.com/microsoft/vcpkg.git -b 2020.11 externals\vcpkg
+git clone https://github.com/microsoft/vcpkg.git externals\vcpkg
 
 call externals\vcpkg\bootstrap-vcpkg.bat
 

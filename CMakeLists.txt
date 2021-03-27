@@ -6,12 +6,12 @@ set(CMAKE_CXX_STANDARD 17)
 #---------------------------------------------
 #-- NetworkWS (main)
 #---------------------------------------------
-project(NetworkWS)
-set_property (DIRECTORY PROPERTY VS_STARTUP_PROJECT "NetworkWS")
+set(PROJECT_NAME NetworkWS)
+project(${PROJECT_NAME})
+set_property (DIRECTORY PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 
 file(GLOB_RECURSE search_src_files 
-	"Source/include/*.*"
-	"Source/src/*.*"
+	"Source/*"
 	)
 	
 message("search_src_files = ${search_src_files}")
@@ -23,8 +23,10 @@ foreach(FILE ${search_src_files})
 	set(GROUP "${GROUP}")
 	source_group("${GROUP}" FILES "${FILE}")
 endforeach()
-add_executable(NetworkWS ${search_src_files})
 
+include_directories("Source/include")
+add_executable(${PROJECT_NAME} ${search_src_files})
+target_precompile_headers(${PROJECT_NAME} PRIVATE Source/pch.h)
 #---------------------------------------------
 #-- fmt
 #---------------------------------------------
@@ -37,4 +39,4 @@ find_package(fmt)
 #---------------------------------------------
 find_package(imgui)
 
-target_link_libraries(NetworkWS fmt::fmt imgui::imgui)
+target_link_libraries(${PROJECT_NAME} fmt::fmt imgui::imgui)

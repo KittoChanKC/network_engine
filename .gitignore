@@ -5,6 +5,7 @@
 
 #Self
 _build
+/externals/vcpkg
 
 # Node artifact files
 node_modules/
