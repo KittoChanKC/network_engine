@@ -10,4 +10,9 @@ public:
     ErrorHandler(const char* msg = "") {
         printf_s("Error(%s)\n", msg);
     }
+
+    ErrorHandler(const int errorCode,const char* msg = "")
+    {
+        printf_s("Error: %s, code: %d \n", msg, errorCode);
+    }
 };

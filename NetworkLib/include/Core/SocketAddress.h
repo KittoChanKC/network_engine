@@ -2,6 +2,8 @@
 //!	@file	SocketAddress.cpp
 //!	@brief	ソケットのアドレス
 //---------------------------------------------------------------------------
+#pragma once
+
 namespace _network {
 class SocketAddress
 {

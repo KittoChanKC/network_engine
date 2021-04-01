@@ -3,18 +3,17 @@ cmake_minimum_required( VERSION 3.10 )
 set(CMAKE_TOOLCHAIN_FILE externals/vcpkg/scripts/buildsystems/vcpkg.cmake)
 set(CMAKE_CXX_STANDARD 17)
 
-#---------------------------------------------
-#-- NetworkWS (main)
-#---------------------------------------------
 project(NetworkWS)
-set(PROJECT_NAME NetworkLib)
-set_property (DIRECTORY PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+#---------------------------------------------
+#-- Client
+#---------------------------------------------
+set(PROJECT_NAME Client)
 
 file(GLOB_RECURSE search_src_files 
-	"NetworkLib/*"
+	"*"
 	)
 	
-message("search_src_files = ${search_src_files}")
+message("search_src_files = ${search_src_files} ")
 
 foreach(FILE ${search_src_files}) 
 	get_filename_component(PARENT_DIR "${FILE}" PATH)
@@ -24,9 +23,8 @@ foreach(FILE ${search_src_files})
 	source_group("${GROUP}" FILES "${FILE}")
 endforeach()
 
-include_directories("NetworkLib/include")
 add_executable(${PROJECT_NAME} ${search_src_files})
-target_precompile_headers(${PROJECT_NAME} PRIVATE NetworkLib/pch.h)
+target_precompile_headers(${PROJECT_NAME} PRIVATE pch.h)
 #---------------------------------------------
 #-- fmt
 #---------------------------------------------
@@ -40,5 +38,3 @@ find_package(fmt)
 find_package(imgui)
 
 target_link_libraries(${PROJECT_NAME} fmt::fmt imgui::imgui)
-
-add_subdirectory(Client)
