@@ -82,42 +82,39 @@ void Socket::Connect(const SocketAddress& addr)
 //    SocketAddress addr;
 //    addr.SetIPv4(hostName, nullptr);
 //}
-void Socket::SendTo(const SocketAddress& addr, const char* data, size_t dataSize)
+int Socket::SendTo(const SocketAddress& addr, const char* data, size_t dataSize)
 {
     if(dataSize > INT_MAX) {
         throw ErrorHandler("Send Data Size IS Too Big");
     }
 
-    int ret = ::sendto(_socket, data, (int)dataSize, 0, &addr._addr, sizeof(addr._addr));
-
-    if(ret < 0) {
-        throw ErrorHandler("Send Fail");
-    }
+    return ::sendto(_socket, data, (int)dataSize, 0, &addr._addr, sizeof(addr._addr));
 }
-void Socket::SendTo(const SocketAddress& addr, const char* data)
+int Socket::SendTo(const SocketAddress& addr, const char* data)
 {
-    SendTo(addr, data, strlen(data));
+    return SendTo(addr, data, strlen(data));
 }
-void Socket::Send(const char* data, size_t dataSize)
+int Socket::Send(const char* data, size_t dataSize)
 {
     if(dataSize > INT_MAX) {
         throw ErrorHandler("Send Data Size IS Too Big");
     }
 
-    int ret = ::send(_socket, data, (int)dataSize, 0);
-    if(ret < 0) {
-        throw ErrorHandler("Send Fail");
-    }
+    return ::send(_socket, data, (int)dataSize, 0);
 }
-void Socket::Send(const std::vector<char>& data)
+int Socket::Send(const std::vector<char>& data)
 {
-    Send(data.data(), data.size());
+    return Send(data.data(), data.size());
 }
-void Socket::Send(const char* data)
+int Socket::Send(const char* data)
 {
-    Send(data, strlen(data));
+    return Send(data, strlen(data));
 }
-void Socket::Recv(std::vector<char>& buf, size_t bytesToRecv)
+int Socket::Send(const std::string& s)
+{
+    return Send(s.data(), s.size());
+}
+int Socket::Recv(std::vector<char>& buf, size_t bytesToRecv)
 {
     buf.clear();
 
@@ -127,10 +124,11 @@ void Socket::Recv(std::vector<char>& buf, size_t bytesToRecv)
     
     buf.resize(bytesToRecv);
 
-    int ret = ::recv(_socket, buf.data(), (int)bytesToRecv, 0);
-    if(ret < 0) {
-        throw ErrorHandler("Recv Fail");
-    }
+    return ::recv(_socket, buf.data(), (int)bytesToRecv, 0);
+}
+bool Socket::IsVaild()
+{
+    return _socket != INVALID_SOCKET;
 }
 size_t Socket::AvailableBytesToRead()
 {

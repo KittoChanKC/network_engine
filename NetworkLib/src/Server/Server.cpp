@@ -3,6 +3,7 @@
 //!	@brief	鯖クラス
 //---------------------------------------------------------------------------
 #include "Server\Server.h"
+
 namespace _network {
 Server::Server()
 {
@@ -20,22 +21,12 @@ void Server::Run()
     
     _listenSocket.Bind(addr);
     _listenSocket.Listen();
+    _listenSocket.Accept(_clientSocket);
 
-    std::vector<char> buf;
-    
-    for(;;) {
-        size_t n = client.AvailableBytesToRead();
-    
-        if(n == 0) {
-            Sleep(0);
-            continue;
-        }
-    
-        client.Recv(buf, n);
-        buf.push_back(0);
-        printf_s("recv %d : %s \n", (int)n, buf.data());
-    
-        client.Send(buf);
-    }
+    _clientSocket.Send(fmt::format("Connected"));
+}
+_network::Socket& Server::GetSocket()
+{
+    return _clientSocket;
 }
 }   // namespace _network

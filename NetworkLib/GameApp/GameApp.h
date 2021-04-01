@@ -20,6 +20,7 @@ public:
 
     void         run();
     virtual void onUpdate(float deltaTime) {}
+    virtual void onNetWork(){};
     virtual void onEvent(SDL_Event& ev){};
     virtual void onImGui(){};
 };

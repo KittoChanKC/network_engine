@@ -91,7 +91,9 @@ void GameAppImpl::_update()
     ImGui::NewFrame();
 
     _owner->onUpdate(ImGui::GetIO().DeltaTime);
+    _owner->onNetWork();
     _owner->onImGui();
+
 }
 
 void GameAppImpl::_render()

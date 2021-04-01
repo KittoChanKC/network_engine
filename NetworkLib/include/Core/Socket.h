@@ -2,6 +2,8 @@
 //!	@file	Socket.h
 //!	@brief	ネットワークソケットクラス
 //---------------------------------------------------------------------------
+#pragma once
+
 #include "SocketAddress.h"
 namespace _network {
 class Socket
@@ -31,16 +33,17 @@ public:
     void Connect(const SocketAddress& addr);
 
     // メッセージを送る(アドレスを指定する)
-    void SendTo(const SocketAddress& addr, const char* data, size_t dataSize);
-    void SendTo(const SocketAddress& addr, const char* data);
+    int SendTo(const SocketAddress& addr, const char* data, size_t dataSize);
+    int SendTo(const SocketAddress& addr, const char* data);
     
-    void Send(const char* data, size_t dataSize);
-    void Send(const std::vector<char>& data);
-    void Send(const char* data);
-
+    int Send(const char* data, size_t dataSize);
+    int Send(const std::vector<char>& data);
+    int Send(const char* data);
+    int Send(const std::string& s);
     // メッセージを受ける
-    void Recv(std::vector<char>& buf, size_t bytesToRecv);
+    int Recv(std::vector<char>& buf, size_t bytesToRecv);
 
+    bool IsVaild();
     //　受けたメッセージのバイト
     size_t AvailableBytesToRead();
 private:

@@ -1,32 +1,29 @@
 ﻿//---------------------------------------------------------------------------
-//!	@file	Server.h
-//!	@brief	鯖クラス
+//!	@file	Client.h
+//!	@brief	クライアントクラス
 //---------------------------------------------------------------------------
-#pragma once
-#include "Core/Socket.h"
-
+#include "Core\Socket.h"
 namespace _network {
-class Server
+class Client
 {
 public:
-    Server();
-    ~Server();
+    Client();
+    ~Client();
 
     // コピー禁止/ムーブ禁止
-    Server(const Server&) = delete;
-    Server(Server&&)      = delete;
-    Server& operator=(const Server&) = delete;
-    Server& operator=(Server&&) = delete;
+    Client(const Client&) = delete;
+    Client(Client&&)      = delete;
+    Client& operator=(const Client&) = delete;
+    Client& operator=(Client&&) = delete;
 
     //---------------------------------------------------------------------------
     // 関数
     //---------------------------------------------------------------------------
     void Run();
 
-    _network::Socket& GetSocket();
+     _network::Socket& GetSocket();
 
 private:
-    _network::Socket _listenSocket;
-    _network::Socket _clientSocket;
+    _network::Socket _socket;
 };
 }   // namespace _network

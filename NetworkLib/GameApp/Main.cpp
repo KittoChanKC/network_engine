@@ -5,15 +5,30 @@
 //---------------------------------------------------------------------------
 #include "GameApp.h"
 #include "Core/Socket.h"
-
+#include "Server/Server.h"
+#include "Client/Client.h"
 static const ImVec2 WINDOW_SIZE{ 1280.f, 720.f };
 
 class MyApp : public GameApp
 {
 public:
+    enum class Type
+    {
+        NONE,
+        SERVER,
+        CLIENT
+    };
+
     ImVec2 playerPos{ 400, 300 };
 
-    virtual void onUpdate(float deltaTime)
+    _network::Server _server;
+    _network::Client _client;
+
+    Type type = Type::NONE;
+
+    bool isConnected = false;
+
+    void onUpdate(float deltaTime) override
     {
         ImVec2 dir{ 0, 0 };
         float  speed = 200;
@@ -40,22 +55,65 @@ public:
                                     ImColor(255, 0, 0));
     }
 
-    virtual void onImGui()
+    void onNetWork() override
     {
-        static float f       = 0.0f;
-        static int   counter = 0;
-        //ImGui::ShowDemoWindow();
-        ImGui::Begin("Info", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);   // Create a window called "Hello, world!" and append into it.
-        ImGui::SetWindowSize({ WINDOW_SIZE.x * 0.3f, WINDOW_SIZE.y });
-        ImGui::SetWindowPos({ WINDOW_SIZE.x * 0.7f, 0.f });
+        _network::Socket& socket = type == Type::SERVER ? _server.GetSocket() : _client.GetSocket();
+      
+        if(!socket.IsVaild()) {
+            return;
+        };
 
-        if(ImGui::Button("Server")) {
+        // send my player
+        {
+            int ret = socket.Send(fmt::format("Test {}\n").c_str());
+            if(ret <= 0) {
+                socket.Close();
+                isConnected = false;
+            }
         }
+
+        {
+            // recv another player
+            size_t n = socket.AvailableBytesToRead();
+            if(n <= 0)
+                return;
+
+            std::vector<char> buf;
+            int               ret = socket.Recv(buf, n);
+            if(ret <= 0) {
+                socket.Close();
+                isConnected = false;
+            }
+            buf.push_back(0);
+            printf("recv %d: %s\n", (int)n, buf.data());
+        }
+    }
+    void onImGui() override
+    {
+        ImGui::Begin("Info", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);   // Create a window called "Hello, world!" and append into it.
+        if(!isConnected) {
+            //ImGui::ShowDemoWindow();
+            ImGui::SetWindowSize({ WINDOW_SIZE.x * 0.3f, WINDOW_SIZE.y });
+            ImGui::SetWindowPos({ WINDOW_SIZE.x * 0.7f, 0.f });
+
+            if(ImGui::Button("Server")) {
+                _server.Run();
+                type        = Type::SERVER;
+                isConnected = true;
+            }
+
+            if(ImGui::Button("Client")) {
+                _client.Run();
+                type        = Type::CLIENT;
+                isConnected = true;
+            }
+        }
+
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
     }
 
-    virtual void onEvent(SDL_Event& ev){
+    void onEvent(SDL_Event& ev) override{
         /*
 		switch (ev.type) 
 		{
