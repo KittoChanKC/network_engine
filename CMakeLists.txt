@@ -14,7 +14,7 @@ file(GLOB_RECURSE search_src_files
 	"NetworkLib/*"
 	)
 	
-message("search_src_files = ${search_src_files}")
+# message("search_src_files = ${search_src_files}")
 
 foreach(FILE ${search_src_files}) 
 	get_filename_component(PARENT_DIR "${FILE}" PATH)
