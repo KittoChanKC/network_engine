@@ -14,3 +14,7 @@ using s64 = std::int64_t;    //!< 64bit符号あり整数
 using u64 = std::uint64_t;   //!< 64bit符号なし整数
 using f32 = float;           //!< 単精度浮動小数点数
 using f64 = double;          //!< 倍精度浮動小数点数
+
+//! uniqeポインタ
+template<typename T>
+using uni_ptr = std::unique_ptr<T>;

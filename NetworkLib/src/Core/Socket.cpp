@@ -71,7 +71,7 @@ bool Socket::Accept(Socket& acceptedSocket)
 void Socket::Connect(const SocketAddress& addr)
 {
     int ret = ::connect(_socket, &addr._addr, sizeof(addr._addr));
-    if (ret < 0) {
+    if(ret < 0) {
         throw ErrorHandler("Connect Fail");
     }
 
@@ -121,10 +121,17 @@ int Socket::Recv(std::vector<char>& buf, size_t bytesToRecv)
     if(bytesToRecv > INT_MAX) {
         throw ErrorHandler("Recv BytesToRecv is Too Big");
     }
-    
+
     buf.resize(bytesToRecv);
 
     return ::recv(_socket, buf.data(), (int)bytesToRecv, 0);
+}
+int Socket::Recv(char* buf, size_t bytesToRecv)
+{
+    if(bytesToRecv > INT_MAX) {
+        throw ErrorHandler("Recv BytesToRecv is Too Big");
+    }
+    return ::recv(_socket, buf, (int)bytesToRecv, 0);
 }
 bool Socket::IsVaild()
 {
@@ -137,8 +144,24 @@ size_t Socket::AvailableBytesToRead()
     if(0 != ::ioctlsocket(_socket, FIONREAD, &n)) {
         throw ErrorHandler("AvailableBytesToRead");
     }
-    
+
     return static_cast<size_t>(n);
 #endif   // _WIN32
+}
+SOCKET Socket::GetSocket()
+{
+    return _socket;
+}
+void Socket::SetNonBlocking(bool b)
+{
+#ifdef _WIN32
+    u_long v = b ? 1 : 0;
+    if(0 != ::ioctlsocket(_socket, FIONBIO, &v)) {
+        //throw ErrorHandler("SetNonBlocking Faile");
+        printf_s("no-bk fail");
+    }
+#else
+# ERROR Not implemented
+#endif   //  _WIN32
 }
 }   // namespace _network

@@ -8,7 +8,7 @@
 #include "GameApp.h"
 #include "Core/Socket.h"
 #include "Server/Server.h"
-#include "Client/Client.h"
+#include "Client/BaseClient.h"
 
 #include "../Objects/Player.h"
 
@@ -29,7 +29,7 @@ public:
     Player p2; //　他
 
     _network::Server _server;
-    _network::Client _client;
+    _network::BaseClient _client;
 
     Type type = Type::NONE;
 
@@ -82,6 +82,15 @@ public:
 
     void onNetWork() override
     {
+        if(type == Type::SERVER) {
+            _server.UpdatePollFD();
+            return;
+        }
+        else if(type == Type::CLIENT) {
+            _client.UpdatePollFD();
+            return;
+        }
+
         _network::Socket& socket = type == Type::SERVER ? _server.GetSocket() : _client.GetSocket();
       
         if(!socket.IsVaild()) {
