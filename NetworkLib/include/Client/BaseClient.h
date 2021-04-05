@@ -6,7 +6,7 @@
 #include "Core\Socket.h"
 namespace _network {
 
-class Server;
+class BaseServer;
 
 class BaseClient
 {
@@ -49,12 +49,12 @@ public:
     void              GetPollFD(PollFD& pf);
 
     bool IsValid();
-    void SetServer(Server* server);
+    void SetServer(BaseServer* server);
     void AcceptFromListenSocket(Socket& listenSocket);
 
 private:
     _network::Socket _socket;
-    Server*          _server = nullptr;
+    BaseServer*          _server = nullptr;
     PollFD           _pollfd;
 
     std::string _sendBuffer;

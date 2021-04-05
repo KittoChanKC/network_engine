@@ -3,7 +3,8 @@
 //!	@brief	クライアントクラス
 //---------------------------------------------------------------------------
 #include "Client/BaseClient.h"
-#include "Server/Server.h"
+#include "Server/BaseServer.h"
+
 namespace _network {
 BaseClient::BaseClient()
 {
@@ -126,7 +127,7 @@ bool BaseClient::IsValid()
 {
     return _socket.IsVaild();
 }
-void BaseClient::SetServer(Server* server)
+void BaseClient::SetServer(BaseServer* server)
 {
     _server = server;
 }

@@ -7,7 +7,7 @@
 
 #include "GameApp.h"
 #include "Core/Socket.h"
-#include "Server/Server.h"
+#include "Server/BaseServer.h"
 #include "Client/BaseClient.h"
 
 #include "../Objects/Player.h"
@@ -28,7 +28,7 @@ public:
     Player p1; //　自分
     Player p2; //　他
 
-    _network::Server _server;
+    _network::BaseServer _server;
     _network::BaseClient _client;
 
     Type type = Type::NONE;

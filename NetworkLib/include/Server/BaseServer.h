@@ -1,22 +1,22 @@
 ﻿//---------------------------------------------------------------------------
-//!	@file	Server.h
+//!	@file	BaseServer.h
 //!	@brief	鯖クラス
 //---------------------------------------------------------------------------
 #pragma once
 #include "Core/Socket.h"
 #include "Client/BaseClient.h"
 namespace _network {
-class Server
+class BaseServer
 {
 public:
-    Server();
-    ~Server();
+    BaseServer();
+    ~BaseServer();
 
     // コピー禁止/ムーブ禁止
-    Server(const Server&) = delete;
-    Server(Server&&)      = delete;
-    Server& operator=(const Server&) = delete;
-    Server& operator=(Server&&) = delete;
+    BaseServer(const BaseServer&) = delete;
+    BaseServer(BaseServer&&)      = delete;
+    BaseServer& operator=(const BaseServer&) = delete;
+    BaseServer& operator=(BaseServer&&) = delete;
 
     //---------------------------------------------------------------------------
     // 関数

@@ -1,17 +1,17 @@
 ﻿//---------------------------------------------------------------------------
-//!	@file	Server.h
+//!	@file	BaseServer.h
 //!	@brief	鯖クラス
 //---------------------------------------------------------------------------
-#include "Server\Server.h"
+#include "Server/BaseServer.h"
 namespace _network {
-Server::Server()
+BaseServer::BaseServer()
 : _quit(false)
 {
 }
-Server::~Server()
+BaseServer::~BaseServer()
 {
 }
-void Server::Run()
+void BaseServer::Run()
 {
     _listenSocket.CreateTCP();
     _listenSocket.SetNonBlocking(true);
@@ -23,7 +23,7 @@ void Server::Run()
     _listenSocket.Bind(addr);
     _listenSocket.Listen();
 }
-void Server::UpdatePollFD()
+void BaseServer::UpdatePollFD()
 {
     if(!_quit) {
         auto n = _clients.size();
@@ -67,11 +67,11 @@ void Server::UpdatePollFD()
         }
     }
 }
-_network::Socket& Server::GetSocket()
+_network::Socket& BaseServer::GetSocket()
 {
     return _clientSocket;
 }
-void Server::RemoveCloseClients()
+void BaseServer::RemoveCloseClients()
 {
     for(size_t i = 0; i < _clients.size();) {
         auto& client = _clients[i];
