@@ -92,4 +92,12 @@ void BaseServer::RemoveCloseClients()
         }
     }
 }
+void BaseServer::SendToAll(std::string sendMsg)
+{
+    int i = 0;
+    for(auto& c : _clients) {
+        c->SetSendBuffer(fmt::format("{} {}", sendMsg, i));
+        i++;
+    }
+}
 }   // namespace _network

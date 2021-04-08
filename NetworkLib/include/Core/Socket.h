@@ -98,7 +98,7 @@ inline int _PollFD(PollFD* pollfd, ULONG pollfdCount, int timeoutMilliSecond)
 
     return ret;
 }
-#else 
+#else
 #TODO
 #endif
 

@@ -5,6 +5,8 @@
 #include "Client/BaseClient.h"
 #include "Server/BaseServer.h"
 
+#include <sstream>
+
 namespace _network {
 BaseClient::BaseClient()
 {
@@ -15,13 +17,14 @@ BaseClient::~BaseClient()
 void BaseClient::Run()
 {
     _socket.CreateTCP();
-    
+
     _network::SocketAddress addr;
     addr.SetIPv4(127, 0, 0, 1);
     addr.SetPortNum(3000);
     _socket.Connect(addr);
-    
-    _socket.Send("authCode: {}");
+    _status = Status::Connecting;
+
+    //_socket.Send("authCode: {}");
 }
 void BaseClient::UpdatePollFD()
 {
@@ -30,10 +33,6 @@ void BaseClient::UpdatePollFD()
 
     if(_PollFD(&pf, 1, 0)) {
         CheckPoll(pf);
-    }
-    int ret = _socket.Send(fmt::format("POS {} {}\n", 1, 2).c_str());
-    if(ret <= 0) {
-        throw ErrorHandler("s");
     }
 }
 
@@ -58,45 +57,66 @@ void BaseClient::OnRecv()
         Close();
         return;
     }
+#if 0
+    //auto oldSize = _recvBuffer.size();
+    //auto newSize = oldSize + n;
 
-    auto oldSize = _recvBuffer.size();
-    auto newSize = oldSize + n;
+    ///* if(newSize > kHeaderSizeLimit) {
+    //    throw ErrorHandler("Excess header size limit");
+    //}*/
 
-   /* if(newSize > kHeaderSizeLimit) {
-        throw ErrorHandler("Excess header size limit");
-    }*/
-
-    _recvBuffer.resize(newSize);
-    auto* p = &*(_recvBuffer.begin() + oldSize);
-    int ret = _socket.Recv(p, n);
+    //_recvBuffer.resize(newSize);
+    //auto* p   = &*(_recvBuffer.begin() + oldSize);
+    //int   ret = _socket.Recv(p, n);
+    //if(ret <= 0) {
+    //    Close();
+    //    //isConnected = false;
+    //    return;
+    //}
+#else
+    //std::vector<char> buf;
+    _recvBuffer.resize(n);
+    auto* p   = &*(_recvBuffer.begin());
+    int   ret = _socket.Recv(p, n);
     if(ret <= 0) {
         Close();
-       // isConnected = false;
         return;
     }
-
+#endif
+    
     _recvBuffer.push_back(0);
-   // HandleCmd(buf.data());
-    printf("recv %d: %s\n", (int)n, _recvBuffer.data());
+    printf("recv%s\n", _recvBuffer.c_str());
+    HandleCmd(_recvBuffer);
+    //printf("client recv %d: %s\n", (int)n, _recvBuffer.data());
+    _recvBuffer.clear();
 }
 void BaseClient::OnSend()
 {
-    if(_sendBufferOffset < _sendBuffer.size()) {
-        size_t n = _sendBuffer.size() - _sendBufferOffset;
-        size_t ret = _socket.Send(_sendBuffer.data() + _sendBufferOffset, n);
+    if(_status == Status::Connecting) {
+        _status = Status::Connected;
     }
 
-    if(_sendBufferOffset < _sendBuffer.size())
-        return;
+    //if(_sendBufferOffset >= _sendBuffer.size()) {
+    //    _sendBufferOffset = 0;
+    //    _sendBuffer.clear();
+    //    return;
+    //}
 
+    //size_t n = _sendBuffer.size() - _sendBufferOffset;
+    //size_t ret = _socket.Send(&_sendBuffer[_sendBufferOffset], n);
+    size_t ret = _socket.Send(_sendBuffer.data(), _sendBuffer.size());
+    //printf_s("Send: %s\n===End===\n", _sendBuffer.c_str());
+    if(ret <= 0) {
+        Close();
+        return;
+    }
     _sendBuffer.clear();
-    _sendBufferOffset = 0;
+    //_sendBufferOffset += ret;
 }
 void BaseClient::Connected()
 {
     _status = Status::Connected;
     printf_s("connected\n");
-    //onConnected();
 }
 void BaseClient::CheckPoll(PollFD& fd)
 {
@@ -120,12 +140,16 @@ void BaseClient::GetPollFD(PollFD& pf)
     }
     if(_status == Status::Connected && _sendBuffer.size())
         write = true;
-    
+
     pf.Reset(_socket, true, write);
 }
 bool BaseClient::IsValid()
 {
     return _socket.IsVaild();
+}
+bool BaseClient::IsConnected()
+{
+    return _status == Status::Connected;
 }
 void BaseClient::SetServer(BaseServer* server)
 {
@@ -136,5 +160,25 @@ void BaseClient::AcceptFromListenSocket(Socket& listenSocket)
     listenSocket.Accept(_socket);
     _pollfd.fd = _socket.GetSocket();
     Connected();
+}
+void BaseClient::SetSendBuffer(std::string sendMsg)
+{
+    _sendBuffer.append(sendMsg);
+}
+void BaseClient::HandleCmd(std::string recvMsg)
+{
+ /*   std::stringstream sstr(recvMsg);
+
+    std::string cmd;
+    sstr >> cmd;
+    if(cmd == "POS") {
+        _server->SendToAll("sssssssss");
+    }*/
+    //while(std::getline(sstr, cmd, '\n')) {
+    //    //printf_s("%s\n",cmd.c_str());
+    //    if(cmd == "POS") {
+    //        _server->SendToAll("sssssssss");
+    //    }
+    //}
 }
 }   // namespace _network

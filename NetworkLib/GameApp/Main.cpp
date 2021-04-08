@@ -6,9 +6,11 @@
 #include <sstream>
 
 #include "GameApp.h"
+#include "GameClient.h"
+#include "GameServer.h"
 #include "Core/Socket.h"
-#include "Server/BaseServer.h"
-#include "Client/BaseClient.h"
+//#include "Server/BaseServer.h"
+//#include "Client/BaseClient.h"
 
 #include "../Objects/Player.h"
 
@@ -25,28 +27,31 @@ public:
     };
 
     //TODO Multi
-    Player p1; //　自分
-    Player p2; //　他
+    Player p1;   //　自分
+    Player p2;   //　他
 
-    _network::BaseServer _server;
-    _network::BaseClient _client;
+    //_network::BaseServer _server;
+    //_network::BaseClient _client;
+    GameServer _server;
+    GameClient _client;
 
     Type type = Type::NONE;
 
     bool isConnected = false;
 
-    void HandleCmd(const char* string){
-        std::stringstream sstr(string);
-        
-        std::string cmd;
-        sstr >> cmd;
+    //void HandleCmd(const char* string)
+    //{
+    //    std::stringstream sstr(string);
 
-        if(cmd == "POS") {
-            f32 x, y;
-            sstr >> x >> y;
-            p2.SetPos(x, y);
-        }
-    };
+    //    std::string cmd;
+    //    sstr >> cmd;
+
+    //    if(cmd == "POS") {
+    //        f32 x, y;
+    //        sstr >> x >> y;
+    //        p2.SetPos(x, y);
+    //    }
+    //};
 
     void onUpdate(float deltaTime) override
     {
@@ -62,8 +67,8 @@ public:
         if(getInputKey(SDLK_d))
             dir.x += 1;
 
-        p1.MoveX( dir.x * deltaTime * speed);
-        p1.MoveY( dir.y * deltaTime * speed);
+        p1.MoveX(dir.x * deltaTime * speed);
+        p1.MoveY(dir.y * deltaTime * speed);
 
         auto* drawList = ImGui::GetBackgroundDrawList();
 
@@ -87,53 +92,56 @@ public:
             return;
         }
         else if(type == Type::CLIENT) {
+            //Handle GameLogic
+            _client.SetSendBuffer(fmt::format("POS {} {}\n", p1.GetPos().x, p1.GetPos().y).c_str());
+
             _client.UpdatePollFD();
             return;
         }
 
-        _network::Socket& socket = type == Type::SERVER ? _server.GetSocket() : _client.GetSocket();
-      
-        if(!socket.IsVaild()) {
-            p2.Disable();
-            return;
-        };
-        p2.Enable();
+        //_network::Socket& socket = type == Type::SERVER ? _server.GetSocket() : _client.GetSocket();
 
-        // TODO: multiSocket
-        // 
-        // send my player
-        {
-            int ret = socket.Send(fmt::format("POS {} {}\n", p1.GetPos().x, p1.GetPos().y).c_str());
-            if(ret <= 0) {
-                socket.Close();
-                isConnected = false;
-                p2.Disable();
-                return;
-            }
-        }
+        //if(!socket.IsVaild()) {
+        //    p2.Disable();
+        //    return;
+        //};
+        //p2.Enable();
 
-        // recv another player
-        {
-            size_t n = socket.AvailableBytesToRead();
-            if(n <= 0)
-                return;
+        //// TODO: multiSocket
+        ////
+        //// send my player
+        //{
+        //    int ret = socket.Send(fmt::format("POS {} {}\n", p1.GetPos().x, p1.GetPos().y).c_str());
+        //    if(ret <= 0) {
+        //        socket.Close();
+        //        isConnected = false;
+        //        p2.Disable();
+        //        return;
+        //    }
+        //}
 
-            std::vector<char> buf;
-            int               ret = socket.Recv(buf, n);
-            if(ret <= 0) {
-                socket.Close();
-                isConnected = false;
-                return;
-            }
-            buf.push_back(0);
-            HandleCmd(buf.data());
-            printf("recv %d: %s\n", (int)n, buf.data());
-        }
+        //// recv another player
+        //{
+        //    size_t n = socket.AvailableBytesToRead();
+        //    if(n <= 0)
+        //        return;
+
+        //    std::vector<char> buf;
+        //    int               ret = socket.Recv(buf, n);
+        //    if(ret <= 0) {
+        //        socket.Close();
+        //        isConnected = false;
+        //        return;
+        //    }
+        //    buf.push_back(0);
+        //    HandleCmd(buf.data());
+        //    printf("recv %d: %s\n", (int)n, buf.data());
+        //}
     }
     void onImGui() override
     {
         ImGui::Begin("Info", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);   // Create a window called "Hello, world!" and append into it.
-        if(!isConnected) {
+        if(!_client.IsConnected()) {
             //ImGui::ShowDemoWindow();
             ImGui::SetWindowSize({ WINDOW_SIZE.x * 0.3f, WINDOW_SIZE.y });
             ImGui::SetWindowPos({ WINDOW_SIZE.x * 0.7f, 0.f });

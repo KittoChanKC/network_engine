@@ -16,7 +16,7 @@ public:
 
     // コピー禁止/ムーブ禁止
     BaseClient(const BaseClient&) = delete;
-    BaseClient(BaseClient&&)  = delete;
+    BaseClient(BaseClient&&)      = delete;
     BaseClient& operator=(const BaseClient&) = delete;
     BaseClient& operator=(BaseClient&&) = delete;
 
@@ -49,12 +49,19 @@ public:
     void              GetPollFD(PollFD& pf);
 
     bool IsValid();
+    bool IsConnected();
+
     void SetServer(BaseServer* server);
     void AcceptFromListenSocket(Socket& listenSocket);
 
-private:
+    void SetSendBuffer(std::string sendMsg);
+
+    virtual void HandleCmd(std::string recvMsg);
+
+
+protected:
     _network::Socket _socket;
-    BaseServer*          _server = nullptr;
+    BaseServer*      _server = nullptr;
     PollFD           _pollfd;
 
     std::string _sendBuffer;

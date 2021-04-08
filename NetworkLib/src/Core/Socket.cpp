@@ -74,8 +74,7 @@ void Socket::Connect(const SocketAddress& addr)
     if(ret < 0) {
         throw ErrorHandler("Connect Fail");
     }
-
-    printf_s("connect\n");
+    printf_s("connecting\n");
 }
 //void Socket::ConnectIPv4(const char* hostName, u16 port)
 //{

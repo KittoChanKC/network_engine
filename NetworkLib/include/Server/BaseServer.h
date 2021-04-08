@@ -5,6 +5,7 @@
 #pragma once
 #include "Core/Socket.h"
 #include "Client/BaseClient.h"
+//#include "../GameApp/GameClient.h"
 namespace _network {
 class BaseServer
 {
@@ -29,6 +30,7 @@ public:
     //　切断したクライアントはクライアントリストから削除
     void RemoveCloseClients();
 
+    void SendToAll(std::string sendMsg);
 private:
     const size_t _MAX_CLIENT = 16;
 
