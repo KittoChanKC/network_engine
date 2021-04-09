@@ -54,11 +54,9 @@ public:
     void SetServer(BaseServer* server);
     void AcceptFromListenSocket(Socket& listenSocket);
 
-    void SetSendBuffer(std::string sendMsg);
+    void SetSendBuffer(const std::string& sendMsg);
 
-    virtual void HandleCmd(std::string recvMsg);
-
-
+    virtual void HandleCmd(const std::string& recvMsg){};
 protected:
     _network::Socket _socket;
     BaseServer*      _server = nullptr;

@@ -59,7 +59,7 @@ void BaseServer::UpdatePollFD()
         }
 
         if(_pollfds[n].CanRead()) {
-            _clients.emplace_back(new BaseClient);
+            _clients.emplace_back(std::move(SetClient()));
             auto& newClient = _clients.back();
             newClient->SetServer(this);
             newClient->AcceptFromListenSocket(_listenSocket);
@@ -99,5 +99,9 @@ void BaseServer::SendToAll(std::string sendMsg)
         c->SetSendBuffer(fmt::format("{} {}", sendMsg, i));
         i++;
     }
+}
+uni_ptr<BaseClient> BaseServer::SetClient()
+{
+    return std::make_unique<BaseClient>();
 }
 }   // namespace _network

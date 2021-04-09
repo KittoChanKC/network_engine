@@ -9,8 +9,6 @@
 #include "GameClient.h"
 #include "GameServer.h"
 #include "Core/Socket.h"
-//#include "Server/BaseServer.h"
-//#include "Client/BaseClient.h"
 
 #include "../Objects/Player.h"
 
@@ -38,20 +36,6 @@ public:
     Type type = Type::NONE;
 
     bool isConnected = false;
-
-    //void HandleCmd(const char* string)
-    //{
-    //    std::stringstream sstr(string);
-
-    //    std::string cmd;
-    //    sstr >> cmd;
-
-    //    if(cmd == "POS") {
-    //        f32 x, y;
-    //        sstr >> x >> y;
-    //        p2.SetPos(x, y);
-    //    }
-    //};
 
     void onUpdate(float deltaTime) override
     {

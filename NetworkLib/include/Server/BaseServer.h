@@ -31,6 +31,8 @@ public:
     void RemoveCloseClients();
 
     void SendToAll(std::string sendMsg);
+
+    virtual uni_ptr<BaseClient> SetClient();
 private:
     const size_t _MAX_CLIENT = 16;
 

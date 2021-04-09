@@ -161,24 +161,8 @@ void BaseClient::AcceptFromListenSocket(Socket& listenSocket)
     _pollfd.fd = _socket.GetSocket();
     Connected();
 }
-void BaseClient::SetSendBuffer(std::string sendMsg)
+void BaseClient::SetSendBuffer(const std::string& sendMsg)
 {
     _sendBuffer.append(sendMsg);
-}
-void BaseClient::HandleCmd(std::string recvMsg)
-{
- /*   std::stringstream sstr(recvMsg);
-
-    std::string cmd;
-    sstr >> cmd;
-    if(cmd == "POS") {
-        _server->SendToAll("sssssssss");
-    }*/
-    //while(std::getline(sstr, cmd, '\n')) {
-    //    //printf_s("%s\n",cmd.c_str());
-    //    if(cmd == "POS") {
-    //        _server->SendToAll("sssssssss");
-    //    }
-    //}
 }
 }   // namespace _network
