@@ -18,6 +18,10 @@ public:
     void MoveY(f32 m);
 
     void SetPos(f32 x, f32 y);
+    void SetId(int id);
+    int GetId() { return _id; };
+
+
     bool IsEnable();
     void Enable();
     void Disable();
@@ -25,4 +29,6 @@ private:
     //float2 pos;
     ImVec2 _pos;
     bool   _enable;
+
+    int _id;
 };

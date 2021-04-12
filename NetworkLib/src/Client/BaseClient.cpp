@@ -14,7 +14,7 @@ BaseClient::BaseClient()
 BaseClient::~BaseClient()
 {
 }
-void BaseClient::Run()
+void BaseClient::Connect()
 {
     _socket.CreateTCP();
 
@@ -23,8 +23,6 @@ void BaseClient::Run()
     addr.SetPortNum(3000);
     _socket.Connect(addr);
     _status = Status::Connecting;
-
-    //_socket.Send("authCode: {}");
 }
 void BaseClient::UpdatePollFD()
 {
@@ -85,9 +83,8 @@ void BaseClient::OnRecv()
 #endif
     
     _recvBuffer.push_back(0);
-    printf("recv%s\n", _recvBuffer.c_str());
+    printf_s("recv%s\n", _recvBuffer.c_str());
     HandleCmd(_recvBuffer);
-    //printf("client recv %d: %s\n", (int)n, _recvBuffer.data());
     _recvBuffer.clear();
 }
 void BaseClient::OnSend()
@@ -96,20 +93,15 @@ void BaseClient::OnSend()
         _status = Status::Connected;
     }
 
-    //if(_sendBufferOffset >= _sendBuffer.size()) {
-    //    _sendBufferOffset = 0;
-    //    _sendBuffer.clear();
-    //    return;
-    //}
-
-    //size_t n = _sendBuffer.size() - _sendBufferOffset;
-    //size_t ret = _socket.Send(&_sendBuffer[_sendBufferOffset], n);
+    if(_sendBuffer.size() <= 0) {
+        return;
+    }
     size_t ret = _socket.Send(_sendBuffer.data(), _sendBuffer.size());
-    //printf_s("Send: %s\n===End===\n", _sendBuffer.c_str());
     if(ret <= 0) {
         Close();
         return;
     }
+    printf_s("Send: %s\n", _sendBuffer.c_str());
     _sendBuffer.clear();
     //_sendBufferOffset += ret;
 }
@@ -164,5 +156,9 @@ void BaseClient::AcceptFromListenSocket(Socket& listenSocket)
 void BaseClient::SetSendBuffer(const std::string& sendMsg)
 {
     _sendBuffer.append(sendMsg);
+}
+BaseServer* BaseClient::GetServer()
+{
+    return _server;
 }
 }   // namespace _network

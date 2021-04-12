@@ -89,11 +89,12 @@ struct PollFD : PollFD_Base
     bool CanWrite() { return revents & POLLOUT; }
 };
 #ifdef _WIN32
-inline int _PollFD(PollFD* pollfd, ULONG pollfdCount, int timeoutMilliSecond)
+inline int _PollFD(PollFD* pollfd, size_t pollfdCount, int timeoutMilliSecond)
 {
-    int ret = ::WSAPoll(pollfd, pollfdCount, timeoutMilliSecond);
+    int ret = ::WSAPoll(pollfd, (ULONG)pollfdCount, timeoutMilliSecond);
     if(ret < 0) {
-        throw ErrorHandler("Poll Fail");
+        //throw ErrorHandler("Poll Fail");
+        printf_s("fail");
     }
 
     return ret;

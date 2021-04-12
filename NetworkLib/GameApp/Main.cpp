@@ -24,21 +24,36 @@ public:
         CLIENT
     };
 
+    enum class GameState
+    {
+        NONE,
+        START,
+        END
+    };
+
     //TODO Multi
-    Player p1;   //　自分
-    Player p2;   //　他
+    //Player p1;   //　自分
+    //Player p2;   //　他
 
     //_network::BaseServer _server;
     //_network::BaseClient _client;
     GameServer _server;
     GameClient _client;
 
-    Type type = Type::NONE;
+    Type _type = Type::NONE;
 
     bool isConnected = false;
 
     void onUpdate(float deltaTime) override
     {
+        if(_type == Type::SERVER && _server.gameStart) {
+            auto* drawList = ImGui::GetBackgroundDrawList();
+            _server.Draw(drawList);
+        }
+
+        if(!_client.IsStarted())
+            return;
+
         ImVec2 dir{ 0, 0 };
         float  speed = 200;
 
@@ -51,33 +66,28 @@ public:
         if(getInputKey(SDLK_d))
             dir.x += 1;
 
-        p1.MoveX(dir.x * deltaTime * speed);
-        p1.MoveY(dir.y * deltaTime * speed);
+        Player* _pPlayer = _type == Type::CLIENT ? _client.GetMyPlayer() : _server.GetMyPlayer();
+
+        _pPlayer->MoveX(dir.x * deltaTime * speed);
+        _pPlayer->MoveY(dir.y * deltaTime * speed);
 
         auto* drawList = ImGui::GetBackgroundDrawList();
 
-        drawList->AddTriangleFilled(ImVec2(p1.GetPos().x, p1.GetPos().y - 12),
-                                    ImVec2(p1.GetPos().x - 12, p1.GetPos().y + 12),
-                                    ImVec2(p1.GetPos().x + 12, p1.GetPos().y + 12),
-                                    ImColor(255, 0, 0));
-
-        if(p2.IsEnable()) {
-            drawList->AddTriangleFilled(ImVec2(p2.GetPos().x, p2.GetPos().y - 12),
-                                        ImVec2(p2.GetPos().x - 12, p2.GetPos().y + 12),
-                                        ImVec2(p2.GetPos().x + 12, p2.GetPos().y + 12),
-                                        ImColor(255, 0, 0));
-        }
+        _client.Draw(drawList);
     }
 
     void onNetWork() override
     {
-        if(type == Type::SERVER) {
+        if(_type == Type::SERVER) {
             _server.UpdatePollFD();
             return;
         }
-        else if(type == Type::CLIENT) {
+        else if(_type == Type::CLIENT) {
             //Handle GameLogic
-            _client.SetSendBuffer(fmt::format("POS {} {}\n", p1.GetPos().x, p1.GetPos().y).c_str());
+            //_client.SetSendBuffer("");
+            //_client.SetSendBuffer(fmt::format("POS {} {} {}\n", p1.GetId(), p1.GetPos().x, p1.GetPos().y).c_str());
+            if(_client.IsStarted())
+                _client.SendPos();
 
             _client.UpdatePollFD();
             return;
@@ -131,15 +141,23 @@ public:
             ImGui::SetWindowPos({ WINDOW_SIZE.x * 0.7f, 0.f });
 
             if(ImGui::Button("Server")) {
-                _server.Run();
-                type        = Type::SERVER;
+                _server.Listen();
+                _type       = Type::SERVER;
                 isConnected = true;
             }
 
             if(ImGui::Button("Client")) {
-                _client.Run();
-                type        = Type::CLIENT;
+                _client.Connect();
+                _type       = Type::CLIENT;
                 isConnected = true;
+            }
+        }
+
+        if(_type == Type::SERVER) {
+            if(_server.GetConnectedClientNum() > 0 && ImGui ::Button("Start")) {
+                //_server.SendToAll(fmt::format("Start"));
+                _server.SendStartPkg();
+                _server.gameStart = true;
             }
         }
 

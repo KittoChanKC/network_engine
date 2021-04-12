@@ -22,7 +22,7 @@ public:
     //---------------------------------------------------------------------------
     // 関数
     //---------------------------------------------------------------------------
-    void Run();
+    void Listen();
     void UpdatePollFD();
 
     _network::Socket& GetSocket();
@@ -32,15 +32,17 @@ public:
 
     void SendToAll(std::string sendMsg);
 
-    virtual uni_ptr<BaseClient> SetClient();
-private:
-    const size_t _MAX_CLIENT = 16;
+    virtual uni_ptr<BaseClient> CreateClient();
+
+    int GetConnectedClientNum();
+protected:
+    const size_t _MAX_CLIENT = 3;
 
     _network::Socket _listenSocket;
     _network::Socket _clientSocket;
 
     std::vector<uni_ptr<BaseClient>> _clients;
-    std::vector<PollFD>          _pollfds;
+    std::vector<PollFD>              _pollfds;
 
     bool _quit;
 };

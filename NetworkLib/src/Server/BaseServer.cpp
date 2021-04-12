@@ -11,7 +11,7 @@ BaseServer::BaseServer()
 BaseServer::~BaseServer()
 {
 }
-void BaseServer::Run()
+void BaseServer::Listen()
 {
     _listenSocket.CreateTCP();
     _listenSocket.SetNonBlocking(true);
@@ -59,11 +59,20 @@ void BaseServer::UpdatePollFD()
         }
 
         if(_pollfds[n].CanRead()) {
-            _clients.emplace_back(std::move(SetClient()));
-            auto& newClient = _clients.back();
-            newClient->SetServer(this);
-            newClient->AcceptFromListenSocket(_listenSocket);
-            printf_s("Accepted\n");
+            if(_clients.size() < _MAX_CLIENT-1) {
+                _clients.emplace_back(std::move(CreateClient()));
+                auto& newClient = _clients.back();
+                newClient->SetServer(this);
+                newClient->AcceptFromListenSocket(_listenSocket);
+
+                newClient->SetSendBuffer(fmt::format("Accept {}", _clients.size()));
+
+                printf_s("Accepted\n");
+            }
+            else {
+                /*auto& newClient = CreateClient();
+                newClient->SetSendBuffer("Block");*/
+            }
         }
     }
 }
@@ -100,8 +109,12 @@ void BaseServer::SendToAll(std::string sendMsg)
         i++;
     }
 }
-uni_ptr<BaseClient> BaseServer::SetClient()
+uni_ptr<BaseClient> BaseServer::CreateClient()
 {
     return std::make_unique<BaseClient>();
+}
+int BaseServer::GetConnectedClientNum()
+{
+    return _clients.size();
 }
 }   // namespace _network

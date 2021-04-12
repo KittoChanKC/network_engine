@@ -23,6 +23,8 @@ public:
     enum class Status
     {
         None,
+        Accepted,
+        Rejected,
         Connecting,
         Connected,
         Closed
@@ -31,7 +33,7 @@ public:
     //---------------------------------------------------------------------------
     // 関数
     //---------------------------------------------------------------------------
-    void Run();
+    void Connect();
     void UpdatePollFD();
     void Close();
 
@@ -57,6 +59,12 @@ public:
     void SetSendBuffer(const std::string& sendMsg);
 
     virtual void HandleCmd(const std::string& recvMsg){};
+
+    void PrintSendBuffer(){
+        printf_s("%s", _sendBuffer.c_str());
+    };
+
+    BaseServer* GetServer();
 protected:
     _network::Socket _socket;
     BaseServer*      _server = nullptr;
