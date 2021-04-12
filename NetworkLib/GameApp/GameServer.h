@@ -12,7 +12,6 @@ public:
     void Draw(ImDrawList* drawlist);
 
     bool gameStart = false;
-
 private:
     uni_ptr<_network::BaseClient> CreateClient() override;
 

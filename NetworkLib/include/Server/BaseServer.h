@@ -31,10 +31,12 @@ public:
     void RemoveCloseClients();
 
     void SendToAll(std::string sendMsg);
+    void SendToAllWithoutID(std::string sendMsg, int id);
 
     virtual uni_ptr<BaseClient> CreateClient();
 
-    int GetConnectedClientNum();
+    size_t GetConnectedClientNum();
+
 protected:
     const size_t _MAX_CLIENT = 3;
 

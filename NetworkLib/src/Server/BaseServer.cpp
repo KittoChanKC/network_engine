@@ -109,11 +109,30 @@ void BaseServer::SendToAll(std::string sendMsg)
         i++;
     }
 }
+void BaseServer::SendToAllWithoutID(std::string sendMsg, int id)
+{
+    id--;
+    /*int i = 0;
+    for(auto& c : _clients) {
+        if(i == id) {
+            continue;
+        }
+        c->SetSendBuffer(fmt::format("{} {}", sendMsg, i));
+        i++;
+    }*/
+
+    for(int i = 0; i < _clients.size(); i++) {
+        if(i == id) 
+            continue;
+        
+        _clients[i]->SetSendBuffer(fmt::format("{} {}", sendMsg, i));
+    }
+}
 uni_ptr<BaseClient> BaseServer::CreateClient()
 {
     return std::make_unique<BaseClient>();
 }
-int BaseServer::GetConnectedClientNum()
+size_t BaseServer::GetConnectedClientNum()
 {
     return _clients.size();
 }

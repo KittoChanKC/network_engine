@@ -26,16 +26,18 @@ void GameClient::HandleCmd(const std::string& recvMsg)
             _gameStart = true;
         }
         if(cmd == "POS") {
-            if(GetServer()) {
-                int c = 0;
-            }
             if(_players.size() > 0) {
                 s32 id;
                 f32 x, y;
                 sstr >> id >> x >> y;
 
                 _players[id].SetPos(x, y);
-                _server->SendToAll(fmt::format("POS {} {} {}\n", id, _players[id].GetPos().x, _players[id].GetPos().y));
+                //_server->SendToAll(fmt::format("POS {} {} {}\n", id, _players[id].GetPos().x, _players[id].GetPos().y));
+            }
+            else {
+                s32 id;
+                sstr >> id;
+                _server->SendToAllWithoutID(recvMsg, id);
             }
         }
     }

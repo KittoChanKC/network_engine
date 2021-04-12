@@ -40,6 +40,8 @@ public:
     GameServer _server;
     GameClient _client;
 
+    std::vector<Player> players;
+
     Type _type = Type::NONE;
 
     bool isConnected = false;
@@ -92,45 +94,6 @@ public:
             _client.UpdatePollFD();
             return;
         }
-
-        //_network::Socket& socket = type == Type::SERVER ? _server.GetSocket() : _client.GetSocket();
-
-        //if(!socket.IsVaild()) {
-        //    p2.Disable();
-        //    return;
-        //};
-        //p2.Enable();
-
-        //// TODO: multiSocket
-        ////
-        //// send my player
-        //{
-        //    int ret = socket.Send(fmt::format("POS {} {}\n", p1.GetPos().x, p1.GetPos().y).c_str());
-        //    if(ret <= 0) {
-        //        socket.Close();
-        //        isConnected = false;
-        //        p2.Disable();
-        //        return;
-        //    }
-        //}
-
-        //// recv another player
-        //{
-        //    size_t n = socket.AvailableBytesToRead();
-        //    if(n <= 0)
-        //        return;
-
-        //    std::vector<char> buf;
-        //    int               ret = socket.Recv(buf, n);
-        //    if(ret <= 0) {
-        //        socket.Close();
-        //        isConnected = false;
-        //        return;
-        //    }
-        //    buf.push_back(0);
-        //    HandleCmd(buf.data());
-        //    printf("recv %d: %s\n", (int)n, buf.data());
-        //}
     }
     void onImGui() override
     {
