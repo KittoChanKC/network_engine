@@ -40,7 +40,7 @@ public:
     GameServer _server;
     GameClient _client;
 
-    std::vector<Player> players;
+    //std::vector<Player> players;
 
     Type _type = Type::NONE;
 

@@ -1,6 +1,7 @@
 #include "Utility/Common.h"
 #include "TypeDef.h"
-namespace _network {
+
+namespace _network::_packet {
 
 enum class PacketType : u16
 {

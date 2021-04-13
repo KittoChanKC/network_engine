@@ -3,7 +3,7 @@
 //!	@brief	クライアントクラス
 //---------------------------------------------------------------------------
 #pragma once
-#include "Core\Socket.h"
+#include "Core/Socket.h"
 namespace _network {
 
 class BaseServer;

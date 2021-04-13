@@ -5,7 +5,7 @@
 #pragma once
 #include "Core/Socket.h"
 #include "Client/BaseClient.h"
-//#include "../GameApp/GameClient.h"
+
 namespace _network {
 class BaseServer
 {

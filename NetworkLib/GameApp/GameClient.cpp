@@ -26,7 +26,7 @@ void GameClient::HandleCmd(const std::string& recvMsg)
             _gameStart = true;
         }
         if(cmd == "POS") {
-            if(_players.size() > 0) {
+            if(!GetServer()) {
                 s32 id;
                 f32 x, y;
                 sstr >> id >> x >> y;
