@@ -3,7 +3,6 @@
 //!	@brief	ネットワークソケットクラス
 //---------------------------------------------------------------------------
 #pragma once
-
 #include "SocketAddress.h"
 namespace _network {
 class Socket

@@ -3,6 +3,7 @@
 //!	@brief	鯖クラス
 //---------------------------------------------------------------------------
 #include "Server/BaseServer.h"
+
 namespace _network {
 BaseServer::BaseServer()
 : _quit(false)
@@ -26,20 +27,20 @@ void BaseServer::Listen()
 void BaseServer::UpdatePollFD()
 {
     if(!_quit) {
-        auto n = _clients.size();
+        auto n = _connections.size();
         _pollfds.resize(n + 1);
         {
-            for(size_t i = 0; i < _clients.size(); i++) {
-                auto& client = _clients[i];
-                if(!client->IsValid()) {
-                    if(_clients.size() > 1) {
-                        std::swap(client, _clients.back());
+            for(size_t i = 0; i < _connections.size(); i++) {
+                auto& connection = _connections[i];
+                if(!connection->IsValid()) {
+                    if(_connections.size() > 1) {
+                        std::swap(connection, _connections.back());
                     }
-                    _clients.resize(_clients.size() - 1);
+                    _connections.resize(_connections.size() - 1);
                     i--;
                     continue;
                 }
-                client->GetPollFD(_pollfds[i]);
+                connection->GetPollFD(_pollfds[i]);
             }
         }
 
@@ -47,31 +48,30 @@ void BaseServer::UpdatePollFD()
         int ret = _PollFD(_pollfds.data(), _pollfds.size(), 0);
         {
             int i = 0;
-            for(auto& client : _clients) {
+            for(auto& connection : _connections) {
                 try {
-                    client->CheckPoll(_pollfds[i]);
+                    connection->CheckPoll(_pollfds[i]);
                 }
                 catch(...) {
-                    client->Close();
+                    connection->Close();
                 }
                 i++;
             }
         }
 
         if(_pollfds[n].CanRead()) {
-            if(_clients.size() < _MAX_CLIENT-1) {
-                _clients.emplace_back(std::move(CreateClient()));
-                auto& newClient = _clients.back();
-                newClient->SetServer(this);
-                newClient->AcceptFromListenSocket(_listenSocket);
+            if(_connections.size() < _MAX_CLIENT - 1) {
+                _connections.emplace_back(std::move(CreateConnection()));
+                auto& newConnection = _connections.back();
+                newConnection->SetServer(this);
+                newConnection->AcceptFromListenSocket(_listenSocket);
 
-                newClient->SetSendBuffer(fmt::format("Accept {}", _clients.size()));
+                newConnection->SetSendBuffer(fmt::format("Accept {}", _connections.size()));
 
                 printf_s("Accepted\n");
             }
             else {
-                /*auto& newClient = CreateClient();
-                newClient->SetSendBuffer("Block");*/
+                // ... 
             }
         }
     }
@@ -82,19 +82,19 @@ _network::Socket& BaseServer::GetSocket()
 }
 void BaseServer::RemoveCloseClients()
 {
-    for(size_t i = 0; i < _clients.size();) {
-        auto& client = _clients[i];
-        if(client && client->GetSocket().IsVaild()) {
+    for(size_t i = 0; i < _connections.size();) {
+        auto& connection = _connections[i];
+        if(connection && connection->GetSocket().IsVaild()) {
             i++;
             continue;
         }
 
         // 当前と最後の交換して 削除します
         try {
-            if(_clients.size() > 1) {
-                std::swap(client, _clients.back());
+            if(_connections.size() > 1) {
+                std::swap(connection, _connections.back());
             }
-            _clients.resize(_clients.size() - 1);
+            _connections.resize(_connections.size() - 1);
         }
         catch(...) {
             printf("remove closed client fail");
@@ -104,7 +104,7 @@ void BaseServer::RemoveCloseClients()
 void BaseServer::SendToAll(std::string sendMsg)
 {
     int i = 0;
-    for(auto& c : _clients) {
+    for(auto& c : _connections) {
         c->SetSendBuffer(fmt::format("{} {}", sendMsg, i));
         i++;
     }
@@ -112,28 +112,20 @@ void BaseServer::SendToAll(std::string sendMsg)
 void BaseServer::SendToAllWithoutID(std::string sendMsg, int id)
 {
     id--;
-    /*int i = 0;
-    for(auto& c : _clients) {
-        if(i == id) {
-            continue;
-        }
-        c->SetSendBuffer(fmt::format("{} {}", sendMsg, i));
-        i++;
-    }*/
 
-    for(int i = 0; i < _clients.size(); i++) {
+    for(int i = 0; i < _connections.size(); i++) {
         if(i == id) 
             continue;
         
-        _clients[i]->SetSendBuffer(fmt::format("{} {}", sendMsg, i));
+        _connections[i]->SetSendBuffer(fmt::format("{} {}", sendMsg, i));
     }
 }
-uni_ptr<BaseClient> BaseServer::CreateClient()
+uni_ptr<BaseConnection> BaseServer::CreateConnection()
 {
-    return std::make_unique<BaseClient>();
+    return std::make_unique<BaseConnection>();
 }
-size_t BaseServer::GetConnectedClientNum()
+size_t BaseServer::GetConnectedNum()
 {
-    return _clients.size();
+    return _connections.size();
 }
 }   // namespace _network

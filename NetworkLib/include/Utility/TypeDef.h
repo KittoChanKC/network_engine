@@ -3,6 +3,7 @@
 //!	@brief	型定義
 //---------------------------------------------------------------------------
 #pragma once
+#include "Common.h"
 
 using s8  = std::int8_t;     //!<  8bit符号あり整数
 using u8  = std::uint8_t;    //!<  8bit符号なし整数

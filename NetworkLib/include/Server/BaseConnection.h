@@ -1,22 +1,26 @@
-//---------------------------------------------------------------------------
+ï»¿//---------------------------------------------------------------------------
 //!	@file	BaseConnection.h
-//!	@brief	I‚É‚Â‚È‚ª‚éƒRƒ“ƒlƒNƒVƒ‡ƒ“
+//!	@brief	é¯–ã«ã¤ãªãŒã‚‹ã‚³ãƒ³ãƒã‚¯ã‚·ãƒ§ãƒ³
 //---------------------------------------------------------------------------
 #pragma once
 #include "Core/Socket.h"
+#include <string>
 namespace _network {
+class BaseServer;
+
 class BaseConnection
 {
+public:
     BaseConnection();
-    ~BaseConnection();
+    virtual ~BaseConnection();
 
-    // ƒRƒs[‹Ö~/ƒ€[ƒu‹Ö~
+    // ã‚³ãƒ”ãƒ¼ç¦æ­¢/ãƒ ãƒ¼ãƒ–ç¦æ­¢
     BaseConnection(const BaseConnection&) = delete;
-    BaseConnection(BaseConnection&&)  = delete;
+    BaseConnection(BaseConnection&&)      = delete;
     BaseConnection& operator=(const BaseConnection&) = delete;
     BaseConnection& operator=(BaseConnection&&) = delete;
 
-    // —ñ‹“Œ^
+    // åˆ—æŒ™å‹
     enum class Status
     {
         None,
@@ -28,9 +32,37 @@ class BaseConnection
     };
 
     //---------------------------------------------------------------------------
-    // ŠÖ”
+    // é–¢æ•°
     //---------------------------------------------------------------------------
+    void AcceptFromListenSocket(Socket& listenSocket);
 
+    void CheckPoll(PollFD& fd);
+    void OnRecv();
+    void OnSend();
+    void Close();
 
+    bool IsValid();
+
+    _network::Socket& GetSocket();
+    void              GetPollFD(PollFD& pf);
+
+    void SetServer(BaseServer* server);
+    
+    void SetSendBuffer(const std::string& sendMsg);
+
+    virtual void HandleCmd(const std::string& recvMsg){};
+    virtual void OnConnected();
+protected:
+    _network::Socket _socket;
+    PollFD           _pollfd;
+
+    BaseServer* _server = nullptr;
+
+    std::string _sendBuffer;
+    size_t      _sendBufferOffset = 0;
+
+    std::string _recvBuffer;
+
+    Status _status = Status::None;
 };
 }   // namespace _network

@@ -6,8 +6,6 @@
 #include "Core/Socket.h"
 namespace _network {
 
-class BaseServer;
-
 class BaseClient
 {
 public:
@@ -53,7 +51,6 @@ public:
     bool IsValid();
     bool IsConnected();
 
-    void SetServer(BaseServer* server);
     void AcceptFromListenSocket(Socket& listenSocket);
 
     void SetSendBuffer(const std::string& sendMsg);
@@ -63,11 +60,8 @@ public:
     void PrintSendBuffer(){
         printf_s("%s", _sendBuffer.c_str());
     };
-
-    BaseServer* GetServer();
 protected:
     _network::Socket _socket;
-    BaseServer*      _server = nullptr;
     PollFD           _pollfd;
 
     std::string _sendBuffer;

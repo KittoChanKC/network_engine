@@ -4,7 +4,7 @@
 //---------------------------------------------------------------------------
 #pragma once
 #include "Core/Socket.h"
-#include "Client/BaseClient.h"
+#include "BaseConnection.h"
 
 namespace _network {
 class BaseServer
@@ -33,9 +33,9 @@ public:
     void SendToAll(std::string sendMsg);
     void SendToAllWithoutID(std::string sendMsg, int id);
 
-    virtual uni_ptr<BaseClient> CreateClient();
+    virtual uni_ptr<BaseConnection> CreateConnection();
 
-    size_t GetConnectedClientNum();
+    size_t GetConnectedNum();
 
 protected:
     const size_t _MAX_CLIENT = 3;
@@ -43,8 +43,8 @@ protected:
     _network::Socket _listenSocket;
     _network::Socket _clientSocket;
 
-    std::vector<uni_ptr<BaseClient>> _clients;
-    std::vector<PollFD>              _pollfds;
+    std::vector<uni_ptr<BaseConnection>> _connections;
+    std::vector<PollFD>                  _pollfds;
 
     bool _quit;
 };

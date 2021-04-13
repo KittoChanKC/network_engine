@@ -143,10 +143,6 @@ bool BaseClient::IsConnected()
 {
     return _status == Status::Connected;
 }
-void BaseClient::SetServer(BaseServer* server)
-{
-    _server = server;
-}
 void BaseClient::AcceptFromListenSocket(Socket& listenSocket)
 {
     listenSocket.Accept(_socket);
@@ -156,9 +152,5 @@ void BaseClient::AcceptFromListenSocket(Socket& listenSocket)
 void BaseClient::SetSendBuffer(const std::string& sendMsg)
 {
     _sendBuffer.append(sendMsg);
-}
-BaseServer* BaseClient::GetServer()
-{
-    return _server;
 }
 }   // namespace _network

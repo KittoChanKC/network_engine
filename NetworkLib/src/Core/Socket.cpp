@@ -130,6 +130,7 @@ int Socket::Recv(char* buf, size_t bytesToRecv)
     if(bytesToRecv > INT_MAX) {
         throw ErrorHandler("Recv BytesToRecv is Too Big");
     }
+    //printf_s("recv%s\n", buf);
     return ::recv(_socket, buf, (int)bytesToRecv, 0);
 }
 bool Socket::IsVaild()
