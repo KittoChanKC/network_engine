@@ -2,6 +2,7 @@
 #include "GameServer.h"
 #include <sstream>
 #include "MyApp.h"
+#include "GamePacket.h"
 
 namespace _network {
 ServerConnection::ServerConnection()
