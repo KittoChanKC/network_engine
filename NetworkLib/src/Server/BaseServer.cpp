@@ -60,17 +60,16 @@ void BaseServer::UpdatePollFD()
         }
 
         if(_pollfds[n].CanRead()) {
-            if(_connections.size() < _MAX_CLIENT - 1) {
+            if(_connections.size() < _MAX_CLIENT) {
                 _connections.emplace_back(std::move(CreateConnection()));
                 auto& newConnection = _connections.back();
                 newConnection->SetServer(this);
                 newConnection->AcceptFromListenSocket(_listenSocket);
 
                 newConnection->SetSendBuffer(fmt::format("Accept {}", _connections.size()));
-
-                printf_s("Accepted\n");
             }
             else {
+                printf_s("Full\n");
                 // ... 
             }
         }
@@ -111,13 +110,9 @@ void BaseServer::SendToAll(std::string sendMsg)
 }
 void BaseServer::SendToAllWithoutID(std::string sendMsg, int id)
 {
-    id--;
-
     for(int i = 0; i < _connections.size(); i++) {
-        if(i == id) 
-            continue;
-        
-        _connections[i]->SetSendBuffer(fmt::format("{} {}", sendMsg, i));
+        if(i == id) continue;
+        _connections[i]->SetSendBuffer(fmt::format("{}", sendMsg));
     }
 }
 uni_ptr<BaseConnection> BaseServer::CreateConnection()

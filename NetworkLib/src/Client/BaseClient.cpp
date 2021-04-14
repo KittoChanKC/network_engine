@@ -83,7 +83,7 @@ void BaseClient::OnRecv()
 #endif
     
     _recvBuffer.push_back(0);
-    printf_s("recv%s\n", _recvBuffer.c_str());
+   
     HandleCmd(_recvBuffer);
     _recvBuffer.clear();
 }

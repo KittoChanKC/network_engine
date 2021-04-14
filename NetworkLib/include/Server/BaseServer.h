@@ -36,7 +36,6 @@ public:
     virtual uni_ptr<BaseConnection> CreateConnection();
 
     size_t GetConnectedNum();
-
 protected:
     const size_t _MAX_CLIENT = 3;
 

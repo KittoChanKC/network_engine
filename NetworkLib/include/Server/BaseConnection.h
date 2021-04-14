@@ -50,8 +50,11 @@ public:
     
     void SetSendBuffer(const std::string& sendMsg);
 
+    void PrintSendBuffer();
+
     virtual void HandleCmd(const std::string& recvMsg){};
     virtual void OnConnected();
+
 protected:
     _network::Socket _socket;
     PollFD           _pollfd;

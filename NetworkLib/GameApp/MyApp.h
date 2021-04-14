@@ -1,3 +1,4 @@
+#pragma once
 #include <sstream>
 #include <vector>
 
@@ -6,7 +7,6 @@
 #include "GameServer.h"
 #include "Core/Socket.h"
 #include "../Objects/Player.h"
-
 static const ImVec2 WINDOW_SIZE{ 1280.f, 720.f };
 class MyApp : public GameApp
 {
@@ -28,14 +28,18 @@ public:
     GameServer _server;
     GameClient _client;
 
-    std::vector<Player> players;
-    Player*             _pPlayer;
+    std::vector<Player> _players;
+    Player*             _pPlayer = nullptr;
 
     Type _type = Type::NONE;
 
-    bool isConnected = false;
+    bool _isConnected = false;
+    bool _isStarted   = false;
 
     void onUpdate(float deltaTime) override;
     void onNetWork() override;
     void onImGui() override;
+
+    //! ŽÀ‘Ì‚ðŽæ“¾
+    static MyApp* Instance();
 };

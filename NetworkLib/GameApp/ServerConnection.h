@@ -1,5 +1,6 @@
 #pragma once
 #include "Server/BaseConnection.h"
+#include "MyApp.h"
 
 namespace _network {
 

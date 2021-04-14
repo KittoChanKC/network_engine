@@ -109,4 +109,8 @@ void BaseConnection::SetSendBuffer(const std::string& sendMsg)
 {
     _sendBuffer.append(sendMsg);
 }
+void BaseConnection::PrintSendBuffer()
+{
+    printf_s("%s", _sendBuffer.c_str());
+}
 }   // namespace _network

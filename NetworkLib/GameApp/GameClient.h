@@ -11,14 +11,6 @@ public:
 
     void SendPos();
 
-    void Draw(ImDrawList* drawlist);
-
-    Player* GetMyPlayer() { return _pPlayer; };
-
-    bool IsStarted() { return _gameStart; };
+    //void Draw(ImDrawList* drawlist);
 private:
-    std::vector<Player> _players;
-    Player* _pPlayer = nullptr;
-
-    bool _gameStart = false;
 };

@@ -2,12 +2,11 @@
 
 void MyApp::onUpdate(float deltaTime)
 {
-    if(_type == Type::SERVER && _server.IsStarted()) {
-        auto* drawList = ImGui::GetBackgroundDrawList();
-        //_server.Draw(drawList);
+    if(_type == Type::SERVER) {
+        return;
     }
 
-    if(!_client.IsStarted())
+    if(!_isStarted)
         return;
 
     ImVec2 dir{ 0, 0 };
@@ -27,9 +26,13 @@ void MyApp::onUpdate(float deltaTime)
 
     auto* drawList = ImGui::GetBackgroundDrawList();
 
-    _client.Draw(drawList);
+    for(auto player : _players) {
+        drawList->AddTriangleFilled(ImVec2(player.GetPos().x, player.GetPos().y - 12),
+                                    ImVec2(player.GetPos().x - 12, player.GetPos().y + 12),
+                                    ImVec2(player.GetPos().x + 12, player.GetPos().y + 12),
+                                    ImColor(255, 0, 0));
+    }
 }
-
 void MyApp::onNetWork()
 {
     if(_type == Type::SERVER) {
@@ -40,7 +43,7 @@ void MyApp::onNetWork()
         //Handle GameLogic
         //_client.SetSendBuffer("");
         //_client.SetSendBuffer(fmt::format("POS {} {} {}\n", p1.GetId(), p1.GetPos().x, p1.GetPos().y).c_str());
-        if(_client.IsStarted())
+        if(_isStarted)
             _client.SendPos();
 
         _client.UpdatePollFD();
@@ -58,13 +61,13 @@ void MyApp::onImGui()
         if(ImGui::Button("Server")) {
             _server.Listen();
             _type       = Type::SERVER;
-            isConnected = true;
+            _isConnected = true;
         }
 
         if(ImGui::Button("Client")) {
             _client.Connect();
             _type       = Type::CLIENT;
-            isConnected = true;
+            _isConnected = true;
         }
     }
 
@@ -78,4 +81,10 @@ void MyApp::onImGui()
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
+}
+
+MyApp* MyApp::Instance()
+{
+    static MyApp instance;   // gpu::Render‚ÌƒVƒ“ƒOƒ‹ƒgƒ“ŽÀ‘Ì
+    return &instance;
 }

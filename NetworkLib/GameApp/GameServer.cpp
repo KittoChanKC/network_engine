@@ -1,23 +1,31 @@
 #include "GameServer.h"
 #include "GameClient.h"
 #include "ServerConnection.h"
+#include "MyApp.h"
 
 void GameServer::SendStartPkg()
 {
+    size_t connectionNum = _connections.size();
+
+    std::vector<Player>& players = MyApp::Instance()->_players;
+
+    players.resize(connectionNum);
+    for(size_t i = 0; i < connectionNum; i++) {
+        players[i].SetId(i);
+    }
+
     // Full String Sample
-    // "Start {player_id} {total_player} {p1.pos.x} {p1.pos.y} {p2.pos.x} {p2.pos.y}\n"
-    //_players.resize(_clients.size()+1);
-    //_pPlayer = &_players[0];
+    //"Start {player_id} {total_player} {p1.pos.x} {p1.pos.y} {p2.pos.x} {p2.pos.y}\n"
+    for(int i = 0; i < connectionNum; i++) {
+        _connections[i]->SetSendBuffer(fmt::format("Start {} {} ", i, connectionNum));
 
-    //for(int i = 0; i < _clients.size(); i++) {
-    //    _clients[i]->SetSendBuffer(fmt::format("Start {} {} ", i+1, _players.size()));
-
-    //    for(auto player : _players) {
-    //        _clients[i]->SetSendBuffer(fmt::format("{} {} ", player.GetPos().x, player.GetPos().y));
-    //    }
-    //    _clients[i]->SetSendBuffer("\n");
-    //    _clients[i]->PrintSendBuffer();
-    //}
+        for(auto p : players) {
+            _connections[i]->SetSendBuffer(fmt::format("{} {} ",
+                                                       p.GetPos().x,
+                                                       p.GetPos().y));
+        }
+        _connections[i]->SetSendBuffer("\n");
+    }
 }
 void GameServer::SetGameStart()
 {
