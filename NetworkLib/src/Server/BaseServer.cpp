@@ -70,15 +70,12 @@ void BaseServer::UpdatePollFD()
             }
             else {
                 printf_s("Full\n");
-                // ... 
+                // ...
             }
         }
     }
 }
-_network::Socket& BaseServer::GetSocket()
-{
-    return _clientSocket;
-}
+
 void BaseServer::RemoveCloseClients()
 {
     for(size_t i = 0; i < _connections.size();) {

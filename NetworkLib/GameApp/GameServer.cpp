@@ -11,7 +11,7 @@ void GameServer::SendStartPkg()
 
     players.resize(connectionNum);
     for(size_t i = 0; i < connectionNum; i++) {
-        players[i].SetId(i);
+        players[i].SetId((int)i);
     }
 
     // Full String Sample

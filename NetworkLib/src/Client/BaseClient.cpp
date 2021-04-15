@@ -55,24 +55,7 @@ void BaseClient::OnRecv()
         Close();
         return;
     }
-#if 0
-    //auto oldSize = _recvBuffer.size();
-    //auto newSize = oldSize + n;
 
-    ///* if(newSize > kHeaderSizeLimit) {
-    //    throw ErrorHandler("Excess header size limit");
-    //}*/
-
-    //_recvBuffer.resize(newSize);
-    //auto* p   = &*(_recvBuffer.begin() + oldSize);
-    //int   ret = _socket.Recv(p, n);
-    //if(ret <= 0) {
-    //    Close();
-    //    //isConnected = false;
-    //    return;
-    //}
-#else
-    //std::vector<char> buf;
     _recvBuffer.resize(n);
     auto* p   = &*(_recvBuffer.begin());
     int   ret = _socket.Recv(p, n);
@@ -80,7 +63,6 @@ void BaseClient::OnRecv()
         Close();
         return;
     }
-#endif
     
     _recvBuffer.push_back(0);
    
@@ -152,5 +134,9 @@ void BaseClient::AcceptFromListenSocket(Socket& listenSocket)
 void BaseClient::SetSendBuffer(const std::string& sendMsg)
 {
     _sendBuffer.append(sendMsg);
+}
+void BaseClient::PrintSendBuffer()
+{
+    printf_s("%s", _sendBuffer.c_str());
 }
 }   // namespace _network
