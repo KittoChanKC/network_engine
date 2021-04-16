@@ -8,7 +8,10 @@ enum class PacketType : u16
     None,
     Start
 };
-//
+
+/// 
+/// GamePacket
+/// 
 class GamePacket : public Packet
 {
 public:

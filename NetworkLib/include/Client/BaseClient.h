@@ -40,8 +40,8 @@ public:
     bool NeedSend() const;   //! 送信の判定
     bool NeedRecv() const;   //! 受信の判定
 
-    void OnSend();   //! 送信
-    void OnRecv();   //! 受信
+    virtual void OnSend();   //! 送信
+    virtual void OnRecv();   //! 受信
 
     void Connected();   //! 繋がっている
 
@@ -55,10 +55,10 @@ public:
 
     void SetSendBuffer(const std::string& sendMsg);   //! 送信バッファ
 
+    void PrintSendBuffer();
+
     // 仮想関数
     virtual void HandleCmd(const std::string& recvMsg){};   //! コマンドの処理
-
-    void PrintSendBuffer();
 
 protected:
     _network::Socket _socket;   //! ソケット
