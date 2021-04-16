@@ -11,10 +11,10 @@ public:
     SocketAddress();
     ~SocketAddress(){};
 
-    void SetPortNum(u16 port);
-    u16  GetPort() const;
+    void SetPortNum(u16 port);   //! ポット
+    u16  GetPort() const;        //! ポット取得
 
-    void SetIPv4(u8 a, u8 b, u8 c, u8 d);
+    void SetIPv4(u8 a, u8 b, u8 c, u8 d); //! IPv4
 
     struct sockaddr _addr;
 };

@@ -21,13 +21,5 @@
 #include <limits.h>
 #include <fmt/format.h>
 
-//struct float2
-//{
-//    f32 _x;
-//    f32 _y;
-//
-//    float2(f32 x = 0.0f,f32 y = 0.0f) {
-//        _x = x;
-//        _y = y;
-//    }
-//};
+#include "TypeContenter.h"
+#include "TypeDef.h"

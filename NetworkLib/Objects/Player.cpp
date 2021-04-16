@@ -25,6 +25,11 @@ void Player::SetPos(f32 x, f32 y)
     _pos.y = y;
 }
 
+void Player::SetId(int id)
+{
+    this->_id = id;
+}
+
 bool Player::IsEnable()
 {
     return _enable;
