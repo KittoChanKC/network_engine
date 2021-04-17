@@ -3,6 +3,7 @@
 //!	@brief	ソケットのアドレス
 //---------------------------------------------------------------------------
 #pragma once
+#include "Utility/Common.h"
 
 namespace _network {
 class SocketAddress

@@ -35,6 +35,11 @@ public:
     {
     }
 
+    Deserializer(const std::string& buf)
+    : Deserializer(buf.data(), buf.size())
+    {
+    }
+
     void io(int8_t& v) { io_var(v); }
     void io(int16_t& v) { io_var(v); }
     void io(int32_t& v) { io_var(v); }
@@ -152,4 +157,4 @@ private:
     const char* _r;
     const char* _end;
 };
-}   // namespace _serialize
+}   // namespace _serializer

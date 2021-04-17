@@ -3,6 +3,7 @@
 //!	@brief	エラー処理 (仮)
 //---------------------------------------------------------------------------
 #pragma once
+#include "Utility/Common.h"
 
 class ErrorHandler : public std::exception
 {

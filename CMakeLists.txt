@@ -3,10 +3,10 @@ cmake_minimum_required( VERSION 3.10 )
 set(CMAKE_TOOLCHAIN_FILE externals/vcpkg/scripts/buildsystems/vcpkg.cmake)
 set(CMAKE_CXX_STANDARD 17)
 
+project(NetworkEngine)
 #---------------------------------------------
 #-- NetworkWS (main)
 #---------------------------------------------
-project(NetworkWS)
 set(PROJECT_NAME NetworkLib)
 set_property (DIRECTORY PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 
@@ -41,4 +41,6 @@ find_package(imgui)
 
 target_link_libraries(${PROJECT_NAME} fmt::fmt imgui::imgui)
 
-add_subdirectory(Client)
+#TODO: サーバーとクライアントのプロジェクトを分ける
+#add_subdirectory(Client)
+#add_subdirectory(Server)
