@@ -3,14 +3,22 @@
 #include <sstream>
 #include "Client/BaseClient.h"
 #include "../Objects/Player.h"
+#include "GamePacket.h"
+using namespace _network::_packet;
 
 class GameClient : public _network::BaseClient
 {
 public:
+    void OnSend() override;   //! ëóêM
+    void SendPacket(GamePacket& pkt);
+    void OnRecv() override;   //! éÛêM
+
+    void OnRecvPacket(PacketType packetType, const std::vector<char>& buf);
+    void OnRecvPacket(PacketType packetType, const std::string& buf);
+
     void HandleCmd(const std::string& recvMsg) override;
 
     void SendPos();
 
-    //void Draw(ImDrawList* drawlist);
 private:
 };

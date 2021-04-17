@@ -59,6 +59,8 @@ public:
     int Recv(std::vector<char>& buf, size_t bytesToRecv);
     int Recv(char* buf, size_t bytesToRecv);
 
+    int AppendRecv(std::string& buf, size_t bytesToRecv);
+
     bool IsVaild(); //! ソケット有効か
 
     SOCKET GetSocket(); //! ソケット取得

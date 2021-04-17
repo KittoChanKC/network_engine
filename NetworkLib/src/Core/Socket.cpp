@@ -76,11 +76,7 @@ void Socket::Connect(const SocketAddress& addr)
     }
     printf_s("connecting\n");
 }
-//void Socket::ConnectIPv4(const char* hostName, u16 port)
-//{
-//    SocketAddress addr;
-//    addr.SetIPv4(hostName, nullptr);
-//}
+
 int Socket::SendTo(const SocketAddress& addr, const char* data, size_t dataSize)
 {
     if(dataSize > INT_MAX) {
@@ -134,6 +130,22 @@ int Socket::Recv(char* buf, size_t bytesToRecv)
     printf_s("recv: %s\n", buf);
     return ret;
 }
+int Socket::AppendRecv(std::string& buf, size_t bytesToRecv)
+{
+#undef max
+    
+    if(bytesToRecv > static_cast<size_t>(std::numeric_limits<int>::max()))
+        throw ErrorHandler("recv bytesToRecv is too big");
+
+    auto oldSize = buf.size();
+    auto newSize = oldSize + bytesToRecv;
+    if(newSize < oldSize)
+        throw ErrorHandler("vector size > size_t");
+
+    buf.resize(newSize);
+    return Recv(&buf[oldSize], bytesToRecv);
+}
+
 bool Socket::IsVaild()
 {
     return _socket != INVALID_SOCKET;
@@ -162,7 +174,7 @@ void Socket::SetNonBlocking(bool b)
         printf_s("no-bk fail");
     }
 #else
-# ERROR Not implemented
+#ERROR Not implemented
 #endif   //  _WIN32
 }
 }   // namespace _network
