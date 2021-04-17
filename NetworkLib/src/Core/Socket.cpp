@@ -15,9 +15,14 @@ void Socket::CreateTCP()
     Close();
 
     // 初期化
-    WSADATA data;
-    if(0 != WSAStartup(MAKEWORD(2, 2), &data)) {
-        throw ErrorHandler("WSA StartUp Fail");
+
+    // WSAStartup　初期化一回でいい　後もいらないです
+    static bool IsWsaStartUp = false;
+    if(!IsWsaStartUp){
+        WSADATA data;
+        if(0 != WSAStartup(MAKEWORD(2, 2), &data)) {
+            throw ErrorHandler("WSA StartUp Fail");
+        }
     }
 
     _socket = ::socket(AF_INET, SOCK_STREAM, 0);
