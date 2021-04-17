@@ -46,6 +46,12 @@ public:
         OnRead(de);
     }
 
+    void Read(const std::string& buf)
+    {
+        Deserializer de(buf);
+        OnRead(de);
+    }
+
 protected:
     // Serializer
     virtual void OnWrite(_serializer::Serializer& se)  = 0;
@@ -54,6 +60,7 @@ protected:
     virtual void io(Serializer& se)   = 0;
     virtual void io(Deserializer& se) = 0;
 
+    virtual std::string ToString() = 0;
     // TODO: Json Conventer
     //virtual void OnToJson(Serializer& se) = 0;
     //virtual void OnFromJson(Deserializer& se) = 0;

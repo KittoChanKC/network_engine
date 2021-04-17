@@ -6,7 +6,8 @@ namespace _network::_packet {
 enum class PacketType : u16
 {
     None,
-    Start
+    Start,
+    Pos
 };
 
 /// 
@@ -52,6 +53,10 @@ public:
     s32 _currentPlayerId;
     s32 _totalPlayer;
 
+    std::string ToString() override{
+        return "";
+    };
+
 protected:
     virtual Type OnType() const override { return Type::Start; }
     virtual void OnWrite(Serializer& se) override { io(se); }
@@ -63,6 +68,37 @@ protected:
         Base::io(se);
         se.io(_currentPlayerId);
         se.io(_totalPlayer);
+    }
+};
+
+class GamePacket_POS : public GamePacket
+{
+    using Base = GamePacket;
+
+public:
+    s32 _currentPlayerId;
+    f32 _x;
+    f32 _y;
+
+protected:
+    virtual Type OnType() const override { return Type::Pos; }
+    virtual void OnWrite(Serializer& se) override { io(se); }
+    virtual void OnRead(Deserializer& se) override { io(se); }
+
+    template<typename SE>
+    void io(SE& se)
+    {
+        Base::io(se);
+        se.io(_currentPlayerId);
+        se.io(_x);
+        se.io(_y);
+    }
+
+    std::string ToString() override{
+        return fmt::format("POS {} {} {}\n",
+                    _currentPlayerId,
+                    _x,
+                    _y);
     }
 };
 }   // namespace _network::_packet
