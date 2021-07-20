@@ -24,8 +24,8 @@ namespace _network {
 class Socket
 {
 public:
-    Socket();
-    ~Socket();
+    Socket();    //!< コンストラクタ
+    ~Socket();   //!< デストラクタ
 
     // コピー禁止/ムーブ禁止
     Socket(const Socket&) = delete;
@@ -37,36 +37,36 @@ public:
     // 関数
     //---------------------------------------------------------------------------
 
+    //----------
     //　鯖に関して関数
-    void CreateTCP();                          //! TCPソケット生成
-    void Bind(const SocketAddress& addr);      //! ソケット登録
-    void Listen(s32 backLog = 64);             //! ソケット接続準備
-    void Connect(const SocketAddress& addr);   //! 接続
-    bool Accept(Socket& acceptedSocket);       //! ソケット接続待機	<- 接続要求
-    void Close();                              //! ソケット切断
+    void CreateTCP();                          //!< TCPソケットを生成
+    void Bind(const SocketAddress& addr);      //!< ソケット登録
+    void Listen(s32 backLog = 64);             //!< ソケット接続準備
+    void Connect(const SocketAddress& addr);   //!< 接続
+    bool Accept(Socket& acceptedSocket);       //!< ソケット接続待機	<- 接続要求
+    void Close();                              //!< ソケット切断
 
-    //! メッセージを送る(アドレスを指定する)
+    //!< メッセージを送る(アドレスを指定する)
     int SendTo(const SocketAddress& addr, const char* data, size_t dataSize);
+    //!< メッセージを送る(アドレスを指定する)
     int SendTo(const SocketAddress& addr, const char* data);
 
-    //! 送信
-    int Send(const char* data, size_t dataSize);
-    int Send(const std::vector<char>& data);
-    int Send(const char* data);
-    int Send(const std::string& s);
+    int Send(const char* data, size_t dataSize);   //!< 送信
+    int Send(const std::vector<char>& data);       //!< 送信
+    int Send(const char* data);                    //!< 送信
+    int Send(const std::string& s);                //!< 送信
 
-    //! 受信
-    int Recv(std::vector<char>& buf, size_t bytesToRecv);
-    int Recv(char* buf, size_t bytesToRecv);
+    int Recv(std::vector<char>& buf, size_t bytesToRecv);   //!< 受信
+    int Recv(char* buf, size_t bytesToRecv);                //!< 受信
 
-    bool IsVaild(); //! ソケット有効か
+    bool IsVaild();   //!< ソケット有効か
 
-    SOCKET GetSocket(); //! ソケット取得
+    SOCKET GetSocket();   //!< ソケット取得
 
-    void SetNonBlocking(bool b); // ノンブロッキング設定 非同期的に実行されます。
+    void SetNonBlocking(bool b);   //< ノンブロッキング設定 非同期的に実行されます。
 
-    //! 受けたパケットのバイト
-    size_t AvailableBytesToRead();
+   
+    size_t AvailableBytesToRead();   //!< 受けたパケットのバイト
 
 private:
     SOCKET _socket = INVALID_SOCKET;

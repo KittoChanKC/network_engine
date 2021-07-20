@@ -22,26 +22,26 @@ public:
     //---------------------------------------------------------------------------
     // 関数
     //---------------------------------------------------------------------------
-    void Listen();  //! クライアントのソケット接続準備
-    void UpdatePollFD(); //! POLL更新
+    void Listen();         //!< クライアントのソケット接続準備
+    void UpdatePollFD();   //!< POLL更新
 
     //　切断したクライアントはクライアントリストから削除
     void RemoveCloseClients();
 
-    void SendToAll(std::string sendMsg); //　繋がっているクライアントに送信する
-    void SendToAllWithoutID(std::string sendMsg, int id); //! 指定IDに送信しない
+    void SendToAll(std::string sendMsg);                    //!< 繋がっているクライアントに送信する
+    void SendToAllWithoutID(std::string sendMsg, int id);   //!< 指定IDに送信しない
 
-    size_t GetConnectedNum(); //! 繋がっているクライアントの数
-    virtual uni_ptr<BaseConnection> CreateConnection(); //! クライアントのコンネックション
+    size_t                          GetConnectedNum();    //!< 繋がっているクライアントの数
+    virtual uni_ptr<BaseConnection> CreateConnection();   //!< クライアントのコンネックション
 
 protected:
-    const size_t _MAX_CLIENT = 3; //! 最大接続数
+    const size_t _MAX_CLIENT = 3;   //!< 最大接続数
 
-    _network::Socket _listenSocket; //! 接続待ちソケット
+    _network::Socket _listenSocket;   //!< 接続待ちソケット
 
-    std::vector<uni_ptr<BaseConnection>> _connections; //! コンネックション
-    std::vector<PollFD>                  _pollfds; //! POLLFD
+    std::vector<uni_ptr<BaseConnection>> _connections;   //!< コンネックション
+    std::vector<PollFD>                  _pollfds;       //!< POLLFD
 
-    bool _quit = false; //! サーバーを閉じる
+    bool _quit = false;   //!< サーバーを閉じる
 };
 }   // namespace _network
