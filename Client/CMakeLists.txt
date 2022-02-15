@@ -30,11 +30,11 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE pch.h)
 #---------------------------------------------
 #add_subdirectory(fmt)
 #set(fmt_DIR externals/fmt/_build)
-find_package(fmt)
+find_package(fmt CONFIG REQUIRED)
 
 #---------------------------------------------
 #-- imgui
 #---------------------------------------------
-find_package(imgui)
+find_package(imgui CONFIG REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} fmt::fmt imgui::imgui)
+target_link_libraries(${PROJECT_NAME} fmt::fmt GLEW::GLEW imgui::imgui)
