@@ -4,6 +4,9 @@ set(CMAKE_TOOLCHAIN_FILE externals/vcpkg/scripts/buildsystems/vcpkg.cmake)
 set(CMAKE_CXX_STANDARD 17)
 
 project(NetworkClient)
+
+find_package(GLEW CONFIG REQUIRED)
+
 #---------------------------------------------
 #-- Client
 #---------------------------------------------
