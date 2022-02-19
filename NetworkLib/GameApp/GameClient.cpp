@@ -2,6 +2,9 @@
 #include "GameServer.h"
 #include "MyApp.h"
 
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
+
 void GameClient::HandleCmd(const std::string& recvMsg)
 {
     std::stringstream sstrRecv(recvMsg);
@@ -41,6 +44,17 @@ void GameClient::HandleCmd(const std::string& recvMsg)
 void GameClient::SendPos()
 {
     Player* player = MyApp::Instance()->_pPlayer;
+
+    json j;
+    j["Player"][0]["id"]     = 1;
+    j["Player"][0]["name"]   = "PlayerId";
+    j["Player"][0]["action"] = "Move";
+
+    j["Player"][1]["id"]     = 2;
+    j["Player"][1]["name"]   = "PlayerId2";
+    j["Player"][1]["action"] = "Moveing";
+
+    SetSendBuffer(j.dump());
     SetSendBuffer(fmt::format("POS {} {} {}\n",
                               player->GetId(),
                               player->GetPos().x,

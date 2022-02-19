@@ -30,6 +30,12 @@ endforeach()
 include_directories("NetworkLib/include")
 add_executable(${PROJECT_NAME} ${search_src_files})
 target_precompile_headers(${PROJECT_NAME} PUBLIC NetworkLib/pch.h)
+
+#---------------------------------------------
+#-- nlohmann-json
+#---------------------------------------------
+find_package(nlohmann_json CONFIG REQUIRED)
+
 #---------------------------------------------
 #-- fmt
 #---------------------------------------------

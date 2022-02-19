@@ -2,6 +2,7 @@
 
 void MyApp::onUpdate(float deltaTime)
 {
+
     if(_type == Type::SERVER) {
         return;
     }
@@ -12,14 +13,23 @@ void MyApp::onUpdate(float deltaTime)
     ImVec2 dir{ 0, 0 };
     float  speed = 200;
 
-    if(getInputKey(SDLK_w))
+    if(ImGui::IsKeyDown(ImGuiKey_W))
         dir.y -= 1;
-    if(getInputKey(SDLK_s))
+    if(ImGui::IsKeyDown(ImGuiKey_S))
         dir.y += 1;
-    if(getInputKey(SDLK_a))
+    if(ImGui::IsKeyDown(ImGuiKey_A))
         dir.x -= 1;
-    if(getInputKey(SDLK_d))
+    if(ImGui::IsKeyDown(ImGuiKey_D))
         dir.x += 1;
+
+    //if(getInputKey(SDLK_w))
+    //    dir.y -= 1;
+    //if(getInputKey(SDLK_s))
+    //    dir.y += 1;
+    //if(getInputKey(SDLK_a))
+    //    dir.x -= 1;
+    //if(getInputKey(SDLK_d))
+    //    dir.x += 1;
 
     _pPlayer->MoveX(dir.x * deltaTime * speed);
     _pPlayer->MoveY(dir.y * deltaTime * speed);

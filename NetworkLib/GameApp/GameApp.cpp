@@ -20,15 +20,16 @@
 #include <glbinding/gl/gl.h>
 using namespace gl;
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLBINDING3)
-#define GLFW_INCLUDE_NONE   // GLFW including OpenGL headers causes ambiguity or multiple definition errors.
+#define GLFW_INCLUDE_NONE          // GLFW including OpenGL headers causes ambiguity or multiple definition errors.
 #include <glbinding/glbinding.h>   // Initialize with glbinding::initialize()
 #include <glbinding/gl/gl.h>
 using namespace gl;
 #else
 #include IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #endif
-
-class GameAppImpl 
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
+class GameAppImpl
 {
 public:
     bool   show_demo_window    = false;
@@ -64,6 +65,17 @@ GameAppImpl::~GameAppImpl()
 
 void GameAppImpl::run()
 {
+    /*json j;
+    j["Player"][0]["id"]     = 1;
+    j["Player"][0]["name"]   = "PlayerId";
+    j["Player"][0]["action"] = "Move";
+
+    j["Player"][1]["id"]     = 2;
+    j["Player"][1]["name"]   = "PlayerId2";
+    j["Player"][1]["action"] = "Moveing";*/
+
+    //printf_s("%s", j.dump().c_str());
+
     while(_running) {
         _update();
         _render();
@@ -96,7 +108,6 @@ void GameAppImpl::_update()
     _owner->onUpdate(ImGui::GetIO().DeltaTime);
     _owner->onNetWork();
     _owner->onImGui();
-
 }
 
 void GameAppImpl::_render()
