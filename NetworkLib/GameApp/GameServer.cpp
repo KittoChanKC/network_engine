@@ -35,6 +35,13 @@ bool GameServer::IsStarted()
 {
     return _isStarted;
 }
+void GameServer::HandleConnected(_network::BaseConnection* connection, s32 size)
+{
+    json msg;
+    msg["key"] = "Accept";
+    msg["id"]  = size;
+    connection->SetSendBuffer(msg.dump());
+}
 //void GameServer::Draw(ImDrawList* drawList)
 //{
 //    for(auto player : _players) {

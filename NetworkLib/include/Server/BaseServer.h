@@ -34,6 +34,8 @@ public:
     size_t                          GetConnectedNum();    //!< 繋がっているクライアントの数
     virtual uni_ptr<BaseConnection> CreateConnection();   //!< クライアントのコンネックション
 
+    virtual void HandleConnected(_network::BaseConnection* connection, s32 size) = 0;
+
 protected:
     const size_t _MAX_CLIENT = 3;   //!< 最大接続数
 

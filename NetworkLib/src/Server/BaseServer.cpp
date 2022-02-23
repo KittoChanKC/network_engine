@@ -78,7 +78,9 @@ void BaseServer::UpdatePollFD()
                 newConnection->SetServer(this);
                 newConnection->AcceptFromListenSocket(_listenSocket);
 
-                newConnection->SetSendBuffer(fmt::format("Accept {}", _connections.size()));
+                //newConnection->SetSendBuffer(fmt::format("Accept {}", _connections.size()));
+
+                HandleConnected(newConnection.get(), _connections.size());
             }
             else {
                 printf_s("Full\n");

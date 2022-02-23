@@ -12,6 +12,18 @@ void GameClient::HandleCmd(const std::string& recvMsg)
 
     std::vector<Player>& players = MyApp::Instance()->_players;
 
+    json j = json::parse(recvMsg);
+    std::cout << j << std::endl;
+    std::string key = j["key"].get<std::string>();
+
+    if(key == "Accept") {
+        _clientState = ClientState::Connected;
+    }
+    else {
+        throw ErrorHandler("Unknow Message");
+    }
+
+#if FALSE
     while(std::getline(sstrRecv, strRecv, '\n')) {
         std::stringstream sstr(strRecv);
         std::string       cmd;
@@ -39,13 +51,14 @@ void GameClient::HandleCmd(const std::string& recvMsg)
             players[id].SetPos(x, y);
         }
     }
+#endif
 }
 
 void GameClient::SendPos()
 {
     Player* player = MyApp::Instance()->_pPlayer;
 
-    json j;
+    /*   json j;
     j["Player"][0]["id"]     = 1;
     j["Player"][0]["name"]   = "PlayerId";
     j["Player"][0]["action"] = "Move";
@@ -54,7 +67,7 @@ void GameClient::SendPos()
     j["Player"][1]["name"]   = "PlayerId2";
     j["Player"][1]["action"] = "Moveing";
 
-    SetSendBuffer(j.dump());
+    SetSendBuffer(j.dump());*/
     SetSendBuffer(fmt::format("POS {} {} {}\n",
                               player->GetId(),
                               player->GetPos().x,

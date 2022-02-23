@@ -20,6 +20,8 @@
 #include <string.h>
 #include <limits.h>
 #include <fmt/format.h>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 #include "TypeContenter.h"
 #include "TypeDef.h"
