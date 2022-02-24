@@ -17,6 +17,7 @@ void ServerConnection::OnConnected()
 }
 void ServerConnection::HandleCmd(const std::string& recvMsg)
 {
+#if 0
     std::stringstream sstrFullRecv(recvMsg);
     std::string       strRecv;
 
@@ -40,6 +41,12 @@ void ServerConnection::HandleCmd(const std::string& recvMsg)
                                                     player->GetId());
         }
     }
-
+#endif
+    json recvJson = json::parse(recvMsg);
+    std::cout << recvJson << std::endl;
+    std::string key = recvJson["key"].get<std::string>();
+    //_server;
+ /*   if() {
+    }*/
 }
 }   // namespace _network

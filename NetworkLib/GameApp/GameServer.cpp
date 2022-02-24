@@ -42,6 +42,25 @@ void GameServer::HandleConnected(_network::BaseConnection* connection, s32 size)
     msg["id"]  = size;
     connection->SetSendBuffer(msg.dump());
 }
+void GameServer::Update()
+{
+    switch(_gameServerState) {
+        case GameServerState::WaitingPlayer:
+        {
+            size_t connectionNum = _connections.size();
+
+            if(connectionNum == 2) {
+                //SendToAll();
+            }
+            else if(connectionNum > 2) {
+                ErrorHandler("êlêîè„å¿");
+            }
+        } break;
+        case GameServerState::GameStart:
+
+            break;
+    }
+}
 //void GameServer::Draw(ImDrawList* drawList)
 //{
 //    for(auto player : _players) {
