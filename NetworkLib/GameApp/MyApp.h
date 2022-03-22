@@ -7,7 +7,7 @@
 #include "GameServer.h"
 #include "Core/Socket.h"
 #include "../Objects/Player.h"
-static const ImVec2 WINDOW_SIZE{ 1280.f, 720.f };
+static const ImVec2 WINDOW_SIZE{ 640.f, 360.f };
 class MyApp : public GameApp
 {
 public:

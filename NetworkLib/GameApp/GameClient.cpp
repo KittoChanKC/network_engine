@@ -21,6 +21,12 @@ void GameClient::HandleCmd(const std::string& recvMsg)
 
             for(int i = 0; i < totalPlayer; i++) {
                 players[i].SetId(i);
+                if(i == 0) {
+                    players[i].SetPos(80, 180);
+                }
+                else {
+                    players[i].SetPos(160, 180);
+                }
                 if(i == myId) {
                     MyApp::Instance()->_pPlayer = &players[i];
                 }

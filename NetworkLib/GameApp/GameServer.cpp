@@ -25,6 +25,8 @@ void GameServer::SendStartPkg()
                                                        p.GetPos().y));
         }
         _connections[i]->SetSendBuffer("\n");
+
+        _isStarted = true;
     }
 }
 void GameServer::SetGameStart()

@@ -2,7 +2,18 @@
 
 void MyApp::onUpdate(float deltaTime)
 {
-    if(_type == Type::SERVER) {
+    if(_type == Type::SERVER && _server.IsStarted()) {
+        auto* drawList = ImGui::GetBackgroundDrawList();
+
+        int i = 0;
+        for(auto player : MyApp::Instance()->_players) {
+            ImColor color = (i % 2 == 0) ? ImColor(255, 0, 0) : ImColor(255, 255, 0);
+            drawList->AddTriangleFilled(ImVec2(player.GetPos().x, player.GetPos().y - 12),
+                                        ImVec2(player.GetPos().x - 12, player.GetPos().y + 12),
+                                        ImVec2(player.GetPos().x + 12, player.GetPos().y + 12),
+                                        color);
+            i++;
+        }
         return;
     }
 
@@ -12,13 +23,13 @@ void MyApp::onUpdate(float deltaTime)
     ImVec2 dir{ 0, 0 };
     float  speed = 200;
 
-    if(getInputKey(SDLK_w))
+    if(ImGui::IsKeyDown(ImGuiKey_W))
         dir.y -= 1;
-    if(getInputKey(SDLK_s))
+    if(ImGui::IsKeyDown(ImGuiKey_S))
         dir.y += 1;
-    if(getInputKey(SDLK_a))
+    if(ImGui::IsKeyDown(ImGuiKey_A))
         dir.x -= 1;
-    if(getInputKey(SDLK_d))
+    if(ImGui::IsKeyDown(ImGuiKey_D))
         dir.x += 1;
 
     _pPlayer->MoveX(dir.x * deltaTime * speed);
@@ -26,11 +37,14 @@ void MyApp::onUpdate(float deltaTime)
 
     auto* drawList = ImGui::GetBackgroundDrawList();
 
+    int i = 0;
     for(auto player : _players) {
+        ImColor color = (i % 2 == 0) ? ImColor(255, 0, 0) : ImColor(255, 255, 0);
         drawList->AddTriangleFilled(ImVec2(player.GetPos().x, player.GetPos().y - 12),
                                     ImVec2(player.GetPos().x - 12, player.GetPos().y + 12),
                                     ImVec2(player.GetPos().x + 12, player.GetPos().y + 12),
-                                    ImColor(255, 0, 0));
+                                    color);
+        i++;
     }
 }
 void MyApp::onNetWork()
@@ -55,23 +69,37 @@ void MyApp::onImGui()
     ImGui::Begin("Info", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);   // Create a window called "Hello, world!" and append into it.
     if(!_client.IsConnected()) {
         //ImGui::ShowDemoWindow();
-        ImGui::SetWindowSize({ WINDOW_SIZE.x * 0.3f, WINDOW_SIZE.y });
+        //if(_type == Type::SERVER) {
+        //    ImGui::SetWindowSize({ WINDOW_SIZE.x * 0.4f, WINDOW_SIZE.y });
+        //    ImGui::SetWindowPos({ 0.f, 0.f });
+        //}
+        //else {
+        //    ImGui::SetWindowSize({ WINDOW_SIZE.x * 0.4f, WINDOW_SIZE.y });
+        //    ImGui::SetWindowPos({ WINDOW_SIZE.x * 0.7f, 0.f });
+        //}
+        ImGui::SetWindowSize({ WINDOW_SIZE.x * 0.4f, WINDOW_SIZE.y });
         ImGui::SetWindowPos({ WINDOW_SIZE.x * 0.7f, 0.f });
 
         if(ImGui::Button("Server")) {
             _server.Listen();
-            _type       = Type::SERVER;
+            _type        = Type::SERVER;
             _isConnected = true;
+            SDL_SetWindowTitle(app::GetWindow(), "NetworkEngine Test (Server)");
         }
 
         if(ImGui::Button("Client")) {
             _client.Connect();
-            _type       = Type::CLIENT;
+            _type        = Type::CLIENT;
             _isConnected = true;
+            SDL_SetWindowTitle(app::GetWindow(), "NetworkEngine Test (Client)");
         }
     }
 
     if(_type == Type::SERVER) {
+        ImGui::Text("ConnectedNum: %d", _server.GetConnectedNum());
+        if(_server.IsStarted()) {
+            ImGui::Text("Status: Observe Mode");
+        }
         if(_server.GetConnectedNum() > 0 && ImGui ::Button("Start")) {
             //_server.SendToAll(fmt::format("Start"));
             _server.SendStartPkg();

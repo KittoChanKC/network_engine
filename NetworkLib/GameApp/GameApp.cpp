@@ -27,7 +27,9 @@ using namespace gl;
 #else
 #include IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #endif
-
+namespace {
+SDL_Window* g_window = nullptr;
+}
 class GameAppImpl 
 {
 public:
@@ -142,7 +144,8 @@ GameAppImpl::GameAppImpl(GameApp* owner)
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    window                       = SDL_CreateWindow("Dear ImGui SDL2+OpenGL3 example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    window                       = SDL_CreateWindow("NetworkEngine Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 360, window_flags);
+    g_window                     = window;
     gl_context                   = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, gl_context);
     SDL_GL_SetSwapInterval(1);   // Enable vsync
@@ -207,4 +210,9 @@ void GameApp::run()
 {
     auto impl = std::make_unique<GameAppImpl>(this);
     impl->run();
+}
+
+SDL_Window* app::GetWindow()
+{
+    return g_window;
 }

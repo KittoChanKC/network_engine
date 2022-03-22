@@ -5,7 +5,7 @@
 #include "Player.h"
 
 Player::Player()
-: _pos(300, 400)
+: _pos(50, 50)
 , _enable(false)
 {
 }

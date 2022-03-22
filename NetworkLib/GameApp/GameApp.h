@@ -18,9 +18,14 @@ public:
         return ImGui::GetIO().KeysDown[s];
     }
 
+
     void         run();
     virtual void onUpdate(float deltaTime) {}
     virtual void onNetWork(){};
     virtual void onEvent(SDL_Event& ev){};
     virtual void onImGui(){};
 };
+
+namespace app {
+SDL_Window* GetWindow();
+}
